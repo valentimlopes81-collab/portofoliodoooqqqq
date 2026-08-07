@@ -39,12 +39,24 @@ and the rest of the site is blurred and darkened so clients can focus on the wor
   </div>
   ```
 
+## Contact page (`contact.html`)
+A 3-step questionnaire — **Date → Service → Details** — in English:
+1. **Date** — pick a day from the calendar (past days are disabled).
+2. **Service** — Photo · Video · Creative Direction · Design.
+3. **Details** — Name, Email, @instagram, **Budget** selector
+   (Not specified · Flexible · up to €150 · €150–300 · €300–450 · €450–600 ·
+   €600–900 · €900–1200 · €1200+), Location, and “Tell me your idea briefly”.
+
+On **Send Request** it opens the visitor's email app pre-filled with all the
+answers, addressed to `CONTACT_EMAIL`.
+**Set your real email** in `assets/js/contact.js` (the `CONTACT_EMAIL` constant).
+
 ## To set up before going live
-- **Contact button / footer links** — replace the placeholders:
+- **Footer links** — replace the placeholders:
   - Instagram: `https://instagram.com/` → your profile
   - Email: `mailto:hello@example.com` → your email
   - WhatsApp: `https://wa.me/351000000000` → your number
-  The header **Contact** button currently scrolls to the footer (`#contact`).
+- **Contact email** — `CONTACT_EMAIL` in `assets/js/contact.js`.
 - Replace the placeholder cover/content SVGs in `assets/img/` with real work.
 
 ## Fonts

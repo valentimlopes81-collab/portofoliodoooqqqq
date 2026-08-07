@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — DOOOQQQQ</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="brand">DOOOQQQQ</a>
+    <div class="header__right">
+      <a href="index.html" class="btn-contact">Close</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="contact">
+      <!-- Step indicator -->
+      <div class="steps">
+        <span class="steps__item active" data-step-label="0">Date</span>
+        <span class="steps__sep">—</span>
+        <span class="steps__item" data-step-label="1">Service</span>
+        <span class="steps__sep">—</span>
+        <span class="steps__item" data-step-label="2">Details</span>
+      </div>
+
+      <form id="wizard">
+        <!-- Step 1: Date -->
+        <div class="step active" data-step="0">
+          <h2 class="step__title">Select a Date</h2>
+          <div class="cal">
+            <div class="cal__head">
+              <button type="button" class="cal__nav" id="calPrev" aria-label="Previous month">&#8249;</button>
+              <span class="cal__month" id="calMonth"></span>
+              <button type="button" class="cal__nav" id="calNext" aria-label="Next month">&#8250;</button>
+            </div>
+            <div class="cal__grid" id="calGrid"></div>
+          </div>
+          <div class="step__nav">
+            <span></span>
+            <button type="button" class="btn btn--primary" data-next disabled>Next</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Service -->
+        <div class="step" data-step="1">
+          <h2 class="step__title">Type of Service</h2>
+          <div class="services">
+            <button type="button" class="service-opt" data-value="Photo">Photo</button>
+            <button type="button" class="service-opt" data-value="Video">Video</button>
+            <button type="button" class="service-opt" data-value="Creative Direction">Creative Direction</button>
+            <button type="button" class="service-opt" data-value="Design">Design</button>
+          </div>
+          <div class="step__nav">
+            <button type="button" class="btn btn--ghost" data-back>Back</button>
+            <button type="button" class="btn btn--primary" data-next disabled>Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Details -->
+        <div class="step" data-step="2">
+          <h2 class="step__title">Details</h2>
+          <div class="form">
+            <input class="field" type="text" name="name" placeholder="Name" required />
+            <input class="field" type="email" name="email" placeholder="Email" required />
+            <input class="field" type="text" name="instagram" placeholder="@instagram" />
+            <div class="form__row">
+              <select class="field" name="budget" required>
+                <option value="" disabled selected>Budget</option>
+                <option value="Not specified">Not specified</option>
+                <option value="Flexible">Flexible</option>
+                <option value="Up to €150">Up to €150</option>
+                <option value="€150–300">€150–300</option>
+                <option value="€300–450">€300–450</option>
+                <option value="€450–600">€450–600</option>
+                <option value="€600–900">€600–900</option>
+                <option value="€900–1200">€900–1200</option>
+                <option value="€1200+">€1200+</option>
+              </select>
+              <input class="field" type="text" name="location" placeholder="Location" />
+            </div>
+            <textarea class="field" name="idea" placeholder="Tell me your idea briefly"></textarea>
+          </div>
+          <div class="step__nav">
+            <button type="button" class="btn btn--ghost" data-back>Back</button>
+            <button type="submit" class="btn btn--primary btn--submit">Send Request</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Confirmation -->
+      <div class="thanks" id="thanks" style="display:none;">
+        Thank you.
+        <small>Your request is ready — your email app will open so you can send it.</small>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__socials">
+      <a class="social" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2Zm0 1.8c-3.15 0-3.5 0-4.74.07-.9.04-1.38.19-1.7.32-.43.16-.73.36-1.05.68-.32.32-.52.62-.68 1.05-.13.32-.28.8-.32 1.7C3.44 8.5 3.43 8.85 3.43 12s0 3.5.07 4.74c.04.9.19 1.38.32 1.7.16.43.36.73.68 1.05.32.32.62.52 1.05.68.32.13.8.28 1.7.32 1.24.07 1.59.07 4.74.07s3.5 0 4.74-.07c.9-.04 1.38-.19 1.7-.32.43-.16.73-.36 1.05-.68.32-.32.52-.62.68-1.05.13-.32.28-.8.32-1.7.07-1.24.07-1.59.07-4.74s0-3.5-.07-4.74c-.04-.9-.19-1.38-.32-1.7a2.8 2.8 0 0 0-.68-1.05 2.8 2.8 0 0 0-1.05-.68c-.32-.13-.8-.28-1.7-.32C15.5 4 15.15 4 12 4Zm0 3.06A4.94 4.94 0 1 1 12 16.94 4.94 4.94 0 0 1 12 7.06Zm0 1.8a3.14 3.14 0 1 0 0 6.28 3.14 3.14 0 0 0 0-6.28Zm5.14-.9a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"/></svg>
+      </a>
+      <a class="social" href="mailto:hello@example.com" aria-label="Email">
+        <svg viewBox="0 0 24 24"><path d="M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1.4 2 7.6 5.3L19.6 6H4.4ZM20 7.87l-7.43 5.2a1 1 0 0 1-1.14 0L4 7.87V18h16V7.87Z"/></svg>
+      </a>
+      <a class="social" href="https://wa.me/351000000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35Zm-5.46 7.45h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37A9.86 9.86 0 0 1 2.1 11.9C2.1 6.44 6.55 2 12.03 2a9.86 9.86 0 0 1 9.92 9.9c0 5.46-4.45 9.9-9.9 9.95Zm8.42-18.3A11.8 11.8 0 0 0 12.03.1C5.5.1.2 5.4.2 11.9c0 2.09.55 4.13 1.6 5.93L.1 24l6.33-1.66a11.8 11.8 0 0 0 5.6 1.43h.01c6.53 0 11.83-5.3 11.84-11.82a11.75 11.75 0 0 0-3.42-8.4Z"/></svg>
+      </a>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> DOOOQQQQ · Afonso Quintela</p>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="assets/js/contact.js"></script>
+</body>
+</html>
