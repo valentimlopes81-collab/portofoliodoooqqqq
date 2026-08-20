@@ -39,6 +39,26 @@ and the rest of the site is blurred and darkened so clients can focus on the wor
   </div>
   ```
 
+## Music player (floating, top-left, on every page)
+A small round button in the top-left corner opens a floating player with
+play/pause, previous/next, a seek bar, volume, and a playlist. It keeps
+playing as visitors move between pages (position, volume and current track
+are remembered), though browsers may require one click before audio can
+resume automatically on a fresh page load — that's a browser autoplay rule,
+not a bug.
+
+**To add your own songs:**
+1. Drop `.mp3` files into `assets/audio/` (e.g. `track-1.mp3`).
+2. Open `assets/js/audio-player.js` and edit the `TRACKS` list at the top:
+   ```js
+   const TRACKS = [
+     { title: 'Song Name', artist: 'Artist', src: 'assets/audio/track-1.mp3' },
+     // add as many as you like
+   ];
+   ```
+Add, remove, or reorder entries freely — the player and playlist adapt
+automatically.
+
 ## Contact page (`contact.html`)
 A 3-step questionnaire — **Date → Service → Details** — in English:
 1. **Date** — pick a day from the calendar (past days are disabled).
