@@ -556,6 +556,66 @@ select.field { appearance: none; cursor: pointer; }
   letter-spacing: 0.02em;
 }
 
+/* ============================================================
+   Floating music player (Spotify)
+   ============================================================ */
+.music {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.music__toggle {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid #2a2a2a;
+  background: #0d0d0d;
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.music__toggle:hover { background: #191919; transform: translateY(-2px); }
+.music__toggle svg { width: 24px; height: 24px; fill: #fff; }
+/* little equalizer animation when the panel is open */
+.music__toggle .bars { display: none; gap: 3px; align-items: flex-end; height: 20px; }
+.music.open .music__toggle .note { display: none; }
+.music.open .music__toggle .bars { display: flex; }
+.music__toggle .bars i {
+  width: 3px;
+  background: #fff;
+  animation: eq 0.9s ease-in-out infinite;
+}
+.music__toggle .bars i:nth-child(1) { height: 8px;  animation-delay: 0s; }
+.music__toggle .bars i:nth-child(2) { height: 16px; animation-delay: 0.2s; }
+.music__toggle .bars i:nth-child(3) { height: 11px; animation-delay: 0.4s; }
+.music__toggle .bars i:nth-child(4) { height: 18px; animation-delay: 0.15s; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .music__toggle .bars i { animation: none; } }
+
+.music__panel {
+  width: min(360px, 82vw);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transform-origin: bottom right;
+  transform: scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.music.open .music__panel { transform: scale(1); opacity: 1; pointer-events: auto; }
+.music__panel iframe { display: block; width: 100%; border: 0; }
+
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {
   .grid--wide { grid-template-columns: 1fr; }
