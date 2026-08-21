@@ -17,6 +17,39 @@
   const media = lb.querySelector('.lightbox__media');
   const closeBtn = lb.querySelector('.lightbox__close');
 
+  // Builds the bottom-left / bottom-right caption text from whichever
+  // data-* attributes are present on the item, so it's fine to leave
+  // any of them out for a given photo.
+  function buildMeta(item) {
+    const camera = item.dataset.camera;
+    const lens = item.dataset.lens;
+    const iso = item.dataset.iso;
+    const shutter = item.dataset.shutter;
+    const aperture = item.dataset.aperture;
+
+    const left = [camera, lens].filter(Boolean).join(' — ');
+    const right = [
+      iso ? 'ISO ' + iso : null,
+      shutter,
+      aperture,
+    ].filter(Boolean).join(' · ');
+
+    if (!left && !right) return;
+
+    if (left) {
+      const el = document.createElement('span');
+      el.className = 'lightbox__meta lightbox__meta--left';
+      el.textContent = left;
+      media.appendChild(el);
+    }
+    if (right) {
+      const el = document.createElement('span');
+      el.className = 'lightbox__meta lightbox__meta--right';
+      el.textContent = right;
+      media.appendChild(el);
+    }
+  }
+
   function open(item) {
     const type = item.dataset.type || 'image';
     const src = item.dataset.full || item.querySelector('img')?.getAttribute('src');
@@ -42,6 +75,7 @@
       img.src = src;
       img.alt = '';
       media.appendChild(img);
+      buildMeta(item);
     }
 
     lb.classList.add('open');
