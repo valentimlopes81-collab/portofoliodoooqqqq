@@ -18,52 +18,49 @@
 */
 
 /* ------------------------------------------------------------
-   PLAYLIST
-   Each line is a search string looked up live on the iTunes Search
-   API, which returns a legal 30-second preview + cover art — no audio
-   files to host. Edit freely: "Artist – Title" matches best, but a
-   title alone works too. Results are cached in the browser so the list
-   only has to be resolved once.
+   PLAYLIST — local .mp3 files
+   Drop each song into assets/audio/ using the file name in `src`
+   below. Optional: add a `cover` (jpg/png) next to it for artwork,
+   e.g. cover: 'assets/audio/01-777-666.jpg'. Reorder / add / remove
+   entries freely — the player and playlist adapt automatically.
    ------------------------------------------------------------ */
-const QUERIES = [
-  '777-666',
-  'Never recover Lil Baby Gunna Drake',
-  'Nonstop Drake',
-  'O QUE FOR PRECISO',
-  'Hours in silence',
-  'Mile High Memories',
-  'made for this shit',
-  'só penso em tu garota ga veigh',
-  'Mist',
-  'Floor Seats A$AP Ferg',
-  'Fukk sleep A$AP Rocky',
-  'Toxic',
-  'Ric flair drip Offset Metro Boomin',
-  'Slaughter JHus',
-  'Trojan Horse',
-  'Odisseia',
-  'Yesterday',
-  'Fim do Nada',
-  'Whisper my Name',
-  'Plot Twist',
-  'FERIAS',
-  'Tic Tac Toe',
-  'Questão de Respeito Norty',
-  'Milk fakemink',
-  'Throw Away Future',
-  'Codeine Crazy Future',
-  'Talk shit like a preacher',
-  'Stick to the Models',
-  'Freestyle',
-  'Ten',
-  'Titanium',
-  'Meltdown Travis Scott Drake',
-  'Money in the grave Drake',
-  'Snow on tha bluff J Cole',
-  'Stop trying to be God Travis Scott',
+const TRACKS = [
+  { title: '777-666',                 artist: '',                          src: 'assets/audio/01-777-666.mp3' },
+  { title: 'Never Recover',           artist: 'Lil Baby & Gunna ft. Drake', src: 'assets/audio/02-never-recover.mp3' },
+  { title: 'Nonstop',                 artist: 'Drake',                     src: 'assets/audio/03-nonstop.mp3' },
+  { title: 'O Que For Preciso',       artist: '',                          src: 'assets/audio/04-o-que-for-preciso.mp3' },
+  { title: 'Hours in Silence',        artist: '',                          src: 'assets/audio/05-hours-in-silence.mp3' },
+  { title: 'Mile High Memories',      artist: '',                          src: 'assets/audio/06-mile-high-memories.mp3' },
+  { title: 'made for this shit',      artist: '',                          src: 'assets/audio/07-made-for-this-shit.mp3' },
+  { title: 'só penso em tu garota',   artist: 'ga e veigh',                src: 'assets/audio/08-so-penso-em-tu-garota.mp3' },
+  { title: 'Mist',                    artist: '',                          src: 'assets/audio/09-mist.mp3' },
+  { title: 'Floor Seats',             artist: 'A$AP Ferg',                 src: 'assets/audio/10-floor-seats.mp3' },
+  { title: 'Fukk Sleep',              artist: 'A$AP Rocky',                src: 'assets/audio/11-fukk-sleep.mp3' },
+  { title: 'Toxic',                   artist: '',                          src: 'assets/audio/12-toxic.mp3' },
+  { title: 'Ric Flair Drip',          artist: 'Offset & Metro Boomin',     src: 'assets/audio/13-ric-flair-drip.mp3' },
+  { title: 'Slaughter',               artist: 'ft. JHus',                  src: 'assets/audio/14-slaughter.mp3' },
+  { title: 'Trojan Horse',            artist: '',                          src: 'assets/audio/15-trojan-horse.mp3' },
+  { title: 'Odisseia',                artist: '',                          src: 'assets/audio/16-odisseia.mp3' },
+  { title: 'Yesterday',               artist: '',                          src: 'assets/audio/17-yesterday.mp3' },
+  { title: 'Fim do Nada',             artist: '',                          src: 'assets/audio/18-fim-do-nada.mp3' },
+  { title: 'Whisper My Name',         artist: '',                          src: 'assets/audio/19-whisper-my-name.mp3' },
+  { title: 'Plot Twist',              artist: '',                          src: 'assets/audio/20-plot-twist.mp3' },
+  { title: 'FÉRIAS',                  artist: '',                          src: 'assets/audio/21-ferias.mp3' },
+  { title: 'Tic Tac Toe',             artist: '',                          src: 'assets/audio/22-tic-tac-toe.mp3' },
+  { title: 'Questão de Respeito',     artist: 'Norty',                     src: 'assets/audio/23-questao-de-respeito.mp3' },
+  { title: 'Milk',                    artist: 'fakemink',                  src: 'assets/audio/24-milk.mp3' },
+  { title: 'Throw Away',              artist: '',                          src: 'assets/audio/25-throw-away.mp3' },
+  { title: 'Codeine Crazy',           artist: 'Future',                    src: 'assets/audio/26-codeine-crazy.mp3' },
+  { title: 'Talk Shit Like a Preacher', artist: '',                        src: 'assets/audio/27-talk-shit-like-a-preacher.mp3' },
+  { title: 'Stick to the Models',     artist: '',                          src: 'assets/audio/28-stick-to-the-models.mp3' },
+  { title: 'Freestyle',               artist: '',                          src: 'assets/audio/29-freestyle.mp3' },
+  { title: 'Ten',                     artist: '',                          src: 'assets/audio/30-ten.mp3' },
+  { title: 'Titanium',                artist: '',                          src: 'assets/audio/31-titanium.mp3' },
+  { title: 'Meltdown',                artist: 'Travis Scott ft. Drake',    src: 'assets/audio/32-meltdown.mp3' },
+  { title: 'Money in the Grave',      artist: 'Drake',                     src: 'assets/audio/33-money-in-the-grave.mp3' },
+  { title: 'Snow on tha Bluff',       artist: 'J. Cole',                   src: 'assets/audio/34-snow-on-tha-bluff.mp3' },
+  { title: 'Stop Trying to Be God',   artist: 'Travis Scott',              src: 'assets/audio/35-stop-trying-to-be-god.mp3' },
 ];
-
-const TRACKS = [];
 
 function start() {
   if (!TRACKS.length) return;
@@ -287,10 +284,8 @@ function start() {
 
   audio.addEventListener('ended', () => loadTrack(index + 1, { autoplay: true }));
   audio.addEventListener('error', () => {
-    titleEl.textContent = `${TRACKS[index].title} (unavailable)`;
-    artistEl.textContent = 'Preview not available — skipping…';
-    // Auto-advance past a dead preview, but stop if the whole list is bad.
-    if (TRACKS.length > 1) setTimeout(() => loadTrack(index + 1, { autoplay: true }), 1200);
+    titleEl.textContent = `${TRACKS[index].title} (missing)`;
+    artistEl.textContent = `Add ${TRACKS[index].src.split('/').pop()} to assets/audio/`;
   });
 
   let seeking = false;
@@ -353,61 +348,5 @@ function start() {
   }
 }
 
-/* ============================================================
-   Resolve the QUERIES into playable 30s previews via the iTunes
-   Search API (JSONP → no CORS issue), then boot the player.
-   Cached in localStorage so it only resolves once per song list.
-   ============================================================ */
-(function bootstrap() {
-  const CACHE_KEY = 'dq_tracks_cache_v2';
-  const signature = QUERIES.join('|');
-
-  function useTracks(list) {
-    if (!list || !list.length) return;
-    list.forEach((t) => TRACKS.push(t));
-    start();
-  }
-
-  // 1) Try the cache first — instant on repeat visits / page changes.
-  try {
-    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
-    if (cached && cached.signature === signature && Array.isArray(cached.tracks) && cached.tracks.length) {
-      useTracks(cached.tracks);
-      return;
-    }
-  } catch (e) { /* ignore */ }
-
-  // 2) Otherwise resolve each query with a JSONP call to iTunes.
-  function itunesSearch(term) {
-    return new Promise((resolve) => {
-      const cb = 'dq_itunes_' + Math.random().toString(36).slice(2);
-      const s = document.createElement('script');
-      const cleanup = () => { try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); };
-      const timer = setTimeout(() => { cleanup(); resolve(null); }, 8000);
-      window[cb] = (data) => {
-        clearTimeout(timer); cleanup();
-        resolve((data && data.results && data.results[0]) || null);
-      };
-      s.onerror = () => { clearTimeout(timer); cleanup(); resolve(null); };
-      s.src = 'https://itunes.apple.com/search?media=music&entity=song&limit=1' +
-        '&term=' + encodeURIComponent(term) + '&callback=' + cb;
-      document.head.appendChild(s);
-    });
-  }
-
-  Promise.all(QUERIES.map(itunesSearch)).then((results) => {
-    const tracks = [];
-    results.forEach((r, i) => {
-      if (r && r.previewUrl) {
-        tracks.push({
-          title: r.trackName || QUERIES[i],
-          artist: r.artistName || '',
-          src: r.previewUrl,
-          cover: r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '300x300bb') : '',
-        });
-      }
-    });
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ signature, tracks })); } catch (e) { /* ignore */ }
-    useTracks(tracks);
-  });
-})();
+/* Boot the player with the local-file playlist above. */
+start();

@@ -47,20 +47,19 @@ are remembered), though browsers may require one click before audio can
 resume automatically on a fresh page load — that's a browser autoplay rule,
 not a bug.
 
-**How the songs are loaded:** the playlist is a list of song names in the
-`QUERIES` array at the top of `assets/js/audio-player.js`. Each name is looked
-up live on the **iTunes Search API**, which returns a legal **30-second
-preview** plus the cover art — so there are no audio files to host. Results
-are cached in the visitor's browser, so the list only resolves once.
+**How the songs are loaded:** the playlist is the `TRACKS` array at the top of
+`assets/js/audio-player.js`. Each entry points at a local `.mp3` file in
+`assets/audio/`. Full-length playback — the files play exactly as uploaded.
 
-**To change the playlist:** edit the `QUERIES` list — one search string per
-line (`'Artist – Title'` matches best; a title alone also works). Add, remove
-or reorder freely. If you bump the cache key (`dq_tracks_cache_v2` → `v3`) the
-new list is re-fetched immediately.
+**To add the music:** drop each `.mp3` into `assets/audio/` using the file
+name already set in `src` (see `assets/audio/README.txt` for the full list,
+e.g. `03-nonstop.mp3`). Nothing else to edit — the moment a file is present it
+plays. Optional per-track artwork: add a `cover:` path (jpg/png) to that
+entry; otherwise a music-note icon is shown.
 
-> Previews are 30 seconds (an Apple/iTunes limit). For full-length playback
-> you'd need to host the actual audio files and point each track's `src` at
-> them instead.
+**To change the playlist:** edit `TRACKS` — reorder, add or remove entries
+freely (`{ title, artist, src }`). The player and the playlist list adapt
+automatically.
 
 ## Contact page (`contact.html`)
 A 3-step questionnaire — **Date → Service → Details** — in English:
