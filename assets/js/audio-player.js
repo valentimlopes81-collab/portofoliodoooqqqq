@@ -51,7 +51,13 @@ const TRACKS = [
   const startTime = typeof state.time === 'number' ? state.time : 0;
   const startVolume = typeof state.volume === 'number' ? state.volume : 0.7;
   const startMuted = !!state.muted;
-  const startExpanded = state.expanded !== false; // default open first visit
+  // Default open on first visit — except on small screens, where a wide
+  // bar popping open over the header looks cramped before anyone has
+  // asked for it. There it starts as just the small icon; a tap still
+  // opens it, and once a visitor has explicitly opened or closed it,
+  // that choice (state.expanded) is remembered on every screen size.
+  const isSmallScreen = window.innerWidth <= 640;
+  const startExpanded = typeof state.expanded === 'boolean' ? state.expanded : !isSmallScreen;
 
   /* ---------------- Build DOM ---------------- */
   const root = document.createElement('div');
