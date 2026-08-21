@@ -6,7 +6,7 @@
 
 (function () {
   // 👉 Replace with the real email before going live:
-  const CONTACT_EMAIL = 'hello@example.com';
+  const CONTACT_EMAIL = 'doooqqqqinquires@gmail.com';
 
   const state = { date: null, service: null };
 

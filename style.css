@@ -524,7 +524,7 @@ select.field { appearance: none; cursor: pointer; }
   .form__row { grid-template-columns: 1fr; }
 }
 
-/* ---------------- Floating audio player (glass / Spotify-style) ---------------- */
+/* ---------------- Floating audio player (horizontal, iOS-style widget) ---------------- */
 .audio-player {
   position: fixed;
   top: 18px;
@@ -539,6 +539,7 @@ select.field { appearance: none; cursor: pointer; }
   --gp-accent: #4fa8ff;
 }
 
+/* Collapsed round icon — crossfades into the expanded bar */
 .audio-player__toggle {
   position: relative;
   width: 50px;
@@ -555,10 +556,14 @@ select.field { appearance: none; cursor: pointer; }
   cursor: pointer;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-  transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
 }
 .audio-player__toggle:hover { transform: scale(1.05); }
-.audio-player.is-open .audio-player__toggle { transform: scale(0.94); }
+.audio-player.is-open .audio-player__toggle {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
 
 .audio-player__toggle-art {
   position: absolute;
@@ -567,11 +572,7 @@ select.field { appearance: none; cursor: pointer; }
   align-items: center;
   justify-content: center;
 }
-.audio-player__toggle-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.audio-player__toggle-img { width: 100%; height: 100%; object-fit: cover; }
 .audio-player__toggle .icon-note { width: 18px; height: 18px; fill: var(--gp-text); }
 .audio-player.is-playing .audio-player__toggle-art { opacity: 0.35; }
 
@@ -599,36 +600,130 @@ select.field { appearance: none; cursor: pointer; }
   50% { transform: scaleY(1); }
 }
 
+/* Expanded widget — grows sideways from the same top-left anchor, so it
+   never drops down over the page content underneath it. */
 .audio-player__panel {
   position: absolute;
-  top: 60px;
+  top: 0;
   left: 0;
-  width: 240px;
-  padding: 22px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  max-width: min(90vw, 480px);
+  padding: 8px 12px 10px;
   border: 1px solid var(--gp-border);
-  border-radius: 28px;
-  background:
-    linear-gradient(165deg, rgba(90, 88, 92, 0.55), rgba(40, 39, 42, 0.55));
+  border-radius: 25px;
+  background: linear-gradient(165deg, rgba(90, 88, 92, 0.6), rgba(40, 39, 42, 0.6));
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   color: var(--gp-text);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px) scale(0.98);
+  pointer-events: none;
+  transform: scale(0.94);
   transform-origin: top left;
   transition: opacity 0.22s var(--ease), transform 0.22s var(--ease), visibility 0.22s;
 }
 .audio-player.is-open .audio-player__panel {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  transform: scale(1);
 }
 
-.audio-player__close,
-.audio-player__queue-toggle {
-  position: absolute;
-  top: 10px;
+.audio-player__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.audio-player__art {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: linear-gradient(150deg, #6b6b70, #2b2a2e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.audio-player__art-img { width: 100%; height: 100%; object-fit: cover; }
+.audio-player__art-fallback { width: 18px; height: 18px; fill: rgba(255, 255, 255, 0.7); }
+
+.audio-player__meta {
+  min-width: 78px;
+  max-width: 128px;
+  flex-shrink: 1;
+}
+.audio-player__title {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--gp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.audio-player__artist {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-player__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.audio-player__btn {
+  border: none;
+  background: var(--gp-bg-soft);
+  color: var(--gp-text);
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s var(--ease), transform 0.15s var(--ease);
+}
+.audio-player__btn:hover { background: rgba(255, 255, 255, 0.24); transform: scale(1.06); }
+.audio-player__btn svg { width: 12px; height: 12px; fill: currentColor; }
+.audio-player__btn--play {
+  width: 34px;
+  height: 34px;
+  background: var(--gp-text);
+  color: #1a1a1a;
+}
+.audio-player__btn--play svg { width: 14px; height: 14px; }
+.audio-player__btn--play:hover { background: #ffffff; }
+
+.audio-player__volume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.audio-player__btn--mute {
+  width: 22px;
+  height: 22px;
+  background: none;
+}
+.audio-player__btn--mute svg { width: 12px; height: 12px; }
+.audio-player__volume-range { width: 46px; }
+
+.audio-player__queue-toggle,
+.audio-player__close {
   border: none;
   background: none;
   color: var(--gp-text-muted);
@@ -636,99 +731,36 @@ select.field { appearance: none; cursor: pointer; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
+  flex-shrink: 0;
   transition: color 0.15s var(--ease), background 0.15s var(--ease);
 }
-.audio-player__close:hover,
-.audio-player__queue-toggle:hover { color: var(--gp-text); background: rgba(255, 255, 255, 0.1); }
-.audio-player__close { right: 8px; font-size: 18px; line-height: 1; }
-.audio-player__queue-toggle { left: 8px; }
+.audio-player__queue-toggle:hover,
+.audio-player__close:hover { color: var(--gp-text); background: rgba(255, 255, 255, 0.1); }
 .audio-player__queue-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+.audio-player__close { font-size: 18px; line-height: 1; }
 
-.audio-player__art-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 14px;
-}
-.audio-player__art {
-  width: 112px;
-  height: 112px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: linear-gradient(150deg, #6b6b70, #2b2a2e);
+.audio-player__seek-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-}
-.audio-player__art-img { width: 100%; height: 100%; object-fit: cover; }
-.audio-player__art-fallback { width: 34px; height: 34px; fill: rgba(255, 255, 255, 0.7); }
-
-.audio-player__title {
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.25;
-  color: var(--gp-text);
-}
-.audio-player__artist {
-  margin-top: 3px;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
-  color: var(--gp-text-muted);
-}
-
-.audio-player__controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin: 16px 0 14px;
-}
-.audio-player__btn {
-  border: none;
-  background: var(--gp-bg-soft);
-  color: var(--gp-text);
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s var(--ease), transform 0.15s var(--ease);
-}
-.audio-player__btn:hover { background: rgba(255, 255, 255, 0.24); transform: scale(1.06); }
-.audio-player__btn svg { width: 14px; height: 14px; fill: currentColor; }
-.audio-player__btn--play {
-  width: 46px;
-  height: 46px;
-  background: var(--gp-text);
-  color: #1a1a1a;
-}
-.audio-player__btn--play svg { width: 17px; height: 17px; }
-.audio-player__btn--play:hover { background: #ffffff; }
-
-.audio-player__seek { margin-bottom: 4px; }
-.audio-player__times {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 14px;
+  gap: 8px;
+  margin-top: 10px;
 }
 .audio-player__time {
   font-size: 10px;
   font-weight: 600;
   color: var(--gp-text-muted);
+  min-width: 28px;
 }
+.audio-player__time--dur { text-align: right; }
 
 .audio-player__range,
 .audio-player__volume-range {
   -webkit-appearance: none;
   appearance: none;
-  width: 100%;
+  flex: 1;
   height: 3px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.28);
@@ -756,18 +788,6 @@ select.field { appearance: none; cursor: pointer; }
 }
 .audio-player__volume-range { accent-color: var(--gp-accent); }
 
-.audio-player__volume {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.audio-player__btn--mute {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-}
-.audio-player__btn--mute svg { width: 13px; height: 13px; }
-
 .audio-player__list {
   list-style: none;
   max-height: 0;
@@ -779,7 +799,7 @@ select.field { appearance: none; cursor: pointer; }
 .audio-player.is-queue-open .audio-player__list {
   max-height: 148px;
   overflow-y: auto;
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top-color: rgba(255, 255, 255, 0.16);
 }
@@ -807,7 +827,23 @@ select.field { appearance: none; cursor: pointer; }
   white-space: nowrap;
 }
 
-@media (max-width: 560px) {
-  .audio-player { top: 12px; left: 12px; }
-  .audio-player__panel { width: calc(100vw - 24px); max-width: 260px; }
+/* Below this, the header's centered brand text has less room either
+   side, so keep the widget from ever reaching under it. */
+@media (max-width: 1100px) {
+  .audio-player__volume { display: none; }
+}
+
+@media (max-width: 640px) {
+  .audio-player { top: 10px; left: 10px; }
+  /* Leave clear space on the right for the header's own Contact link
+     instead of stretching under it. */
+  .audio-player__panel { max-width: calc(100vw - 108px); padding: 6px 10px 8px; }
+  .audio-player__meta { min-width: 46px; max-width: 68px; }
+  .audio-player__row { gap: 5px; }
+  .audio-player__art { width: 32px; height: 32px; border-radius: 9px; }
+  .audio-player__controls { gap: 4px; }
+  .audio-player__btn { width: 22px; height: 22px; }
+  .audio-player__btn--play { width: 28px; height: 28px; }
+  .audio-player__queue-toggle,
+  .audio-player__close { width: 20px; height: 20px; }
 }
