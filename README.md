@@ -47,17 +47,20 @@ are remembered), though browsers may require one click before audio can
 resume automatically on a fresh page load — that's a browser autoplay rule,
 not a bug.
 
-**To add your own songs:**
-1. Drop `.mp3` files into `assets/audio/` (e.g. `track-1.mp3`).
-2. Open `assets/js/audio-player.js` and edit the `TRACKS` list at the top:
-   ```js
-   const TRACKS = [
-     { title: 'Song Name', artist: 'Artist', src: 'assets/audio/track-1.mp3' },
-     // add as many as you like
-   ];
-   ```
-Add, remove, or reorder entries freely — the player and playlist adapt
-automatically.
+**How the songs are loaded:** the playlist is a list of song names in the
+`QUERIES` array at the top of `assets/js/audio-player.js`. Each name is looked
+up live on the **iTunes Search API**, which returns a legal **30-second
+preview** plus the cover art — so there are no audio files to host. Results
+are cached in the visitor's browser, so the list only resolves once.
+
+**To change the playlist:** edit the `QUERIES` list — one search string per
+line (`'Artist – Title'` matches best; a title alone also works). Add, remove
+or reorder freely. If you bump the cache key (`dq_tracks_cache_v2` → `v3`) the
+new list is re-fetched immediately.
+
+> Previews are 30 seconds (an Apple/iTunes limit). For full-length playback
+> you'd need to host the actual audio files and point each track's `src` at
+> them instead.
 
 ## Contact page (`contact.html`)
 A 3-step questionnaire — **Date → Service → Details** — in English:

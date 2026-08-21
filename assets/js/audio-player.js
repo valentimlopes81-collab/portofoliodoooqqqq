@@ -17,13 +17,55 @@
    That's it — the player below works with any number of tracks.
 */
 
-const TRACKS = [
-  { title: 'Track 1', artist: 'DOOOQQQQ', src: 'assets/audio/track-1.mp3' },
-  { title: 'Track 2', artist: 'DOOOQQQQ', src: 'assets/audio/track-2.mp3' },
-  { title: 'Track 3', artist: 'DOOOQQQQ', src: 'assets/audio/track-3.mp3' },
+/* ------------------------------------------------------------
+   PLAYLIST
+   Each line is a search string looked up live on the iTunes Search
+   API, which returns a legal 30-second preview + cover art — no audio
+   files to host. Edit freely: "Artist – Title" matches best, but a
+   title alone works too. Results are cached in the browser so the list
+   only has to be resolved once.
+   ------------------------------------------------------------ */
+const QUERIES = [
+  '777-666',
+  'Never recover Lil Baby Gunna Drake',
+  'Nonstop Drake',
+  'O QUE FOR PRECISO',
+  'Hours in silence',
+  'Mile High Memories',
+  'made for this shit',
+  'só penso em tu garota ga veigh',
+  'Mist',
+  'Floor Seats A$AP Ferg',
+  'Fukk sleep A$AP Rocky',
+  'Toxic',
+  'Ric flair drip Offset Metro Boomin',
+  'Slaughter JHus',
+  'Trojan Horse',
+  'Odisseia',
+  'Yesterday',
+  'Fim do Nada',
+  'Whisper my Name',
+  'Plot Twist',
+  'FERIAS',
+  'Tic Tac Toe',
+  'Questão de Respeito Norty',
+  'Milk fakemink',
+  'Throw Away Future',
+  'Codeine Crazy Future',
+  'Talk shit like a preacher',
+  'Stick to the Models',
+  'Freestyle',
+  'Ten',
+  'Titanium',
+  'Meltdown Travis Scott Drake',
+  'Money in the grave Drake',
+  'Snow on tha bluff J Cole',
+  'Stop trying to be God Travis Scott',
 ];
 
-(function () {
+const TRACKS = [];
+
+function start() {
   if (!TRACKS.length) return;
 
   const STORAGE_KEY = 'dq_player_state';
@@ -246,7 +288,9 @@ const TRACKS = [
   audio.addEventListener('ended', () => loadTrack(index + 1, { autoplay: true }));
   audio.addEventListener('error', () => {
     titleEl.textContent = `${TRACKS[index].title} (unavailable)`;
-    artistEl.textContent = 'Add the mp3 file to assets/audio/';
+    artistEl.textContent = 'Preview not available — skipping…';
+    // Auto-advance past a dead preview, but stop if the whole list is bad.
+    if (TRACKS.length > 1) setTimeout(() => loadTrack(index + 1, { autoplay: true }), 1200);
   });
 
   let seeking = false;
@@ -307,4 +351,63 @@ const TRACKS = [
     // and a tap on Play continues right where they left off.
     audio.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
   }
+}
+
+/* ============================================================
+   Resolve the QUERIES into playable 30s previews via the iTunes
+   Search API (JSONP → no CORS issue), then boot the player.
+   Cached in localStorage so it only resolves once per song list.
+   ============================================================ */
+(function bootstrap() {
+  const CACHE_KEY = 'dq_tracks_cache_v2';
+  const signature = QUERIES.join('|');
+
+  function useTracks(list) {
+    if (!list || !list.length) return;
+    list.forEach((t) => TRACKS.push(t));
+    start();
+  }
+
+  // 1) Try the cache first — instant on repeat visits / page changes.
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && cached.signature === signature && Array.isArray(cached.tracks) && cached.tracks.length) {
+      useTracks(cached.tracks);
+      return;
+    }
+  } catch (e) { /* ignore */ }
+
+  // 2) Otherwise resolve each query with a JSONP call to iTunes.
+  function itunesSearch(term) {
+    return new Promise((resolve) => {
+      const cb = 'dq_itunes_' + Math.random().toString(36).slice(2);
+      const s = document.createElement('script');
+      const cleanup = () => { try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); };
+      const timer = setTimeout(() => { cleanup(); resolve(null); }, 8000);
+      window[cb] = (data) => {
+        clearTimeout(timer); cleanup();
+        resolve((data && data.results && data.results[0]) || null);
+      };
+      s.onerror = () => { clearTimeout(timer); cleanup(); resolve(null); };
+      s.src = 'https://itunes.apple.com/search?media=music&entity=song&limit=1' +
+        '&term=' + encodeURIComponent(term) + '&callback=' + cb;
+      document.head.appendChild(s);
+    });
+  }
+
+  Promise.all(QUERIES.map(itunesSearch)).then((results) => {
+    const tracks = [];
+    results.forEach((r, i) => {
+      if (r && r.previewUrl) {
+        tracks.push({
+          title: r.trackName || QUERIES[i],
+          artist: r.artistName || '',
+          src: r.previewUrl,
+          cover: r.artworkUrl100 ? r.artworkUrl100.replace('100x100bb', '300x300bb') : '',
+        });
+      }
+    });
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ signature, tracks })); } catch (e) { /* ignore */ }
+    useTracks(tracks);
+  });
 })();
