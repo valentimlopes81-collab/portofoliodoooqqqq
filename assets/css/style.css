@@ -78,7 +78,10 @@ main { flex: 1 0 auto; width: 100%; }
 
 /* ---------------- Hero ---------------- */
 .hero {
-  padding: clamp(60px, 12vh, 150px) 0 clamp(40px, 7vh, 90px);
+  /* top/bottom only — the section also carries .wrap, which already
+     supplies the left/right padding; a shorthand here would zero it out */
+  padding-top: clamp(60px, 12vh, 150px);
+  padding-bottom: clamp(40px, 7vh, 90px);
 }
 .hero__title {
   font-weight: 900;
@@ -147,7 +150,9 @@ main { flex: 1 0 auto; width: 100%; }
 
 /* ---------------- Category page header ---------------- */
 .page-head {
-  padding: clamp(46px, 9vh, 110px) 0 clamp(24px, 4vh, 48px);
+  /* top/bottom only — see .hero above for why this can't be a shorthand */
+  padding-top: clamp(46px, 9vh, 110px);
+  padding-bottom: clamp(24px, 4vh, 48px);
 }
 .page-head h1 {
   font-weight: 900;
@@ -654,9 +659,15 @@ select.field { appearance: none; cursor: pointer; }
 .audio-player__art-fallback { width: 18px; height: 18px; fill: rgba(255, 255, 255, 0.7); }
 
 .audio-player__meta {
-  min-width: 78px;
+  min-width: 0;
   max-width: 128px;
   flex-shrink: 1;
+  /* Without this, flex items default to a content-based automatic
+     min-width, so the long "Track 1 (unavailable)" nowrap text was
+     forcing the box (and the whole bar) wider than max-width allowed,
+     which is why the widget grew past its intended size and started
+     overlapping the header logo. */
+  overflow: hidden;
 }
 .audio-player__title {
   font-size: 13px;
@@ -835,15 +846,22 @@ select.field { appearance: none; cursor: pointer; }
 
 @media (max-width: 640px) {
   .audio-player { top: 10px; left: 10px; }
-  /* Leave clear space on the right for the header's own Contact link
-     instead of stretching under it. */
-  .audio-player__panel { max-width: calc(100vw - 108px); padding: 6px 10px 8px; }
-  .audio-player__meta { min-width: 46px; max-width: 68px; }
-  .audio-player__row { gap: 5px; }
-  .audio-player__art { width: 32px; height: 32px; border-radius: 9px; }
-  .audio-player__controls { gap: 4px; }
-  .audio-player__btn { width: 22px; height: 22px; }
-  .audio-player__btn--play { width: 28px; height: 28px; }
+  /* There isn't enough room next to the collapsed icon to grow a wide
+     bar sideways without running under the header's logo or Contact
+     link, so on small screens the expanded widget instead drops down
+     below the header entirely — same tap-to-open icon, but it opens
+     as a tray under the header rather than squeezing into its row. */
+  .audio-player__panel {
+    top: 60px;
+    max-width: calc(100vw - 20px);
+    padding: 8px 12px 10px;
+  }
+  .audio-player__meta { min-width: 60px; max-width: 160px; }
+  .audio-player__row { gap: 8px; }
+  .audio-player__art { width: 36px; height: 36px; border-radius: 10px; }
+  .audio-player__controls { gap: 6px; }
+  .audio-player__btn { width: 26px; height: 26px; }
+  .audio-player__btn--play { width: 32px; height: 32px; }
   .audio-player__queue-toggle,
-  .audio-player__close { width: 20px; height: 20px; }
+  .audio-player__close { width: 24px; height: 24px; }
 }
