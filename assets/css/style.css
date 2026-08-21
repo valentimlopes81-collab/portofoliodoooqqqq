@@ -176,7 +176,6 @@ main { flex: 1 0 auto; width: 100%; }
   gap: clamp(10px, 1.4vw, 22px);
   padding-bottom: clamp(60px, 10vh, 120px);
 }
-.grid--stills { grid-template-columns: 1fr; }
 .grid--wide   { grid-template-columns: 1fr; }
 
 .item {
@@ -193,8 +192,25 @@ main { flex: 1 0 auto; width: 100%; }
   display: block;
   transition: transform 0.6s var(--ease), filter 0.4s var(--ease);
 }
-.item--tall  { height: clamp(380px, 84vh, 760px); }
 .item--video { height: clamp(300px, 72vh, 700px); }
+
+/* Stills — same bordered-card grid at every screen size (mobile and
+   desktop both scroll the same pattern; only the column count grows
+   with available width). */
+.grid--stills {
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(10px, 2vw, 18px);
+}
+@media (min-width: 700px) {
+  .grid--stills { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1150px) {
+  .grid--stills { grid-template-columns: repeat(4, 1fr); }
+}
+.item--photo {
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line);
+}
 .item:hover img { transform: scale(1.04); }
 
 /* Scroll reveal */
@@ -279,6 +295,7 @@ body.lb-open .site-footer {
 }
 
 .lightbox__media {
+  position: relative;
   max-width: min(1200px, 92vw);
   max-height: 86vh;
   transform: scale(0.96);
@@ -293,6 +310,26 @@ body.lb-open .site-footer {
   border-radius: 4px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
+
+/* Photo details (camera/lens/exposure) shown over the enlarged still —
+   thin white caption text tucked into the bottom corners. Populated
+   from the data-* attributes on the .item in stills.html, so adding
+   the info for a new photo is just filling in those attributes. */
+.lightbox__meta {
+  position: absolute;
+  bottom: clamp(10px, 2.5vw, 22px);
+  max-width: 46%;
+  font-weight: 400;
+  font-size: clamp(10px, 1.1vw, 12px);
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+.lightbox__meta--left { left: clamp(10px, 2.5vw, 22px); text-align: left; }
+.lightbox__meta--right { right: clamp(10px, 2.5vw, 22px); text-align: right; }
 .lightbox__close {
   position: absolute;
   top: clamp(16px, 3vw, 34px);
@@ -521,11 +558,9 @@ select.field { appearance: none; cursor: pointer; }
 
 /* ---------------- Responsive ---------------- */
 @media (max-width: 900px) {
-  .grid--stills { grid-template-columns: repeat(2, 1fr); }
   .grid--wide { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .grid--stills { grid-template-columns: 1fr 1fr; }
   .form__row { grid-template-columns: 1fr; }
 }
 
@@ -845,6 +880,11 @@ select.field { appearance: none; cursor: pointer; }
 }
 
 @media (max-width: 640px) {
+  /* Smaller wordmark on phones — the clamp() floor of 22px still read
+     too large next to the compact header on narrow screens. */
+  .brand { font-size: 16px; letter-spacing: 0.04em; }
+  .site-header { padding-top: 16px; padding-bottom: 16px; }
+
   .audio-player { top: 10px; left: 10px; }
   /* There isn't enough room next to the collapsed icon to grow a wide
      bar sideways without running under the header's logo or Contact
