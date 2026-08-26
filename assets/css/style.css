@@ -82,7 +82,16 @@ main { flex: 1 0 auto; width: 100%; }
      supplies the left/right padding; a shorthand here would zero it out */
   padding-top: clamp(60px, 12vh, 150px);
   padding-bottom: clamp(40px, 7vh, 90px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
 }
+/* Two columns once there's room: text left, image right */
+@media (min-width: 820px) {
+  .hero { grid-template-columns: 1.05fr 0.95fr; }
+}
+.hero__text { min-width: 0; }
 .hero__title {
   font-weight: 900;
   font-size: clamp(24px, 3.4vw, 40px);
@@ -92,12 +101,26 @@ main { flex: 1 0 auto; width: 100%; }
   margin-bottom: 14px;
 }
 .hero__bio {
-  max-width: 720px;
+  max-width: 640px;
   font-weight: 600;
   font-size: clamp(15px, 1.4vw, 19px);
   line-height: 1.5;
   color: #cfcfcf;
   letter-spacing: 0.005em;
+}
+.hero__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--card);
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* ---------------- Category list (home) — vertical ---------------- */
