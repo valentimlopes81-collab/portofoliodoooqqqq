@@ -1,48 +1,46 @@
-DROP YOUR .mp3 FILES HERE
-=========================
+AUDIO FILES
+===========
 
-The music player plays these local files. Upload each song into this folder
-using EXACTLY the file name below (all lowercase). As soon as a file is here,
-it plays — no code changes needed.
+These .mp3 files are the site's music playlist, wired up in the TRACKS list
+at the top of assets/js/audio-player.js (full-length local playback).
 
-If you'd rather use different names, just update the matching `src` in the
-TRACKS list at the top of assets/js/audio-player.js.
+To add a song: upload the .mp3 here, then add a matching entry to TRACKS
+({ title, artist, src: 'assets/audio/your-file.mp3' }). To remove one, delete
+its file and its TRACKS entry. Optional cover art: add a jpg/png and set a
+`cover:` path on that entry.
 
-  01-777-666.mp3
-  02-never-recover.mp3
-  03-nonstop.mp3
-  04-o-que-for-preciso.mp3
-  05-hours-in-silence.mp3
-  06-mile-high-memories.mp3
-  07-made-for-this-shit.mp3
-  08-so-penso-em-tu-garota.mp3
-  09-mist.mp3
-  10-floor-seats.mp3
-  11-fukk-sleep.mp3
-  12-toxic.mp3
-  13-ric-flair-drip.mp3
-  14-slaughter.mp3
-  15-trojan-horse.mp3
-  16-odisseia.mp3
-  17-yesterday.mp3
-  18-fim-do-nada.mp3
-  19-whisper-my-name.mp3
-  20-plot-twist.mp3
-  21-ferias.mp3
-  22-tic-tac-toe.mp3
-  23-questao-de-respeito.mp3
-  24-milk.mp3
-  25-throw-away.mp3
-  26-codeine-crazy.mp3
-  27-talk-shit-like-a-preacher.mp3
-  28-stick-to-the-models.mp3
-  29-freestyle.mp3
-  30-ten.mp3
-  31-titanium.mp3
-  32-meltdown.mp3
-  33-money-in-the-grave.mp3
-  34-snow-on-tha-bluff.mp3
-  35-stop-trying-to-be-god.mp3
-
-Optional: add cover art (jpg/png) and reference it with a `cover:` path in the
-same TRACKS entry, e.g. cover: 'assets/audio/03-nonstop.jpg'.
+Current files:
+  777-666.mp3
+  9.mp3
+  codeine-crazy.mp3
+  ferias.mp3
+  floor-seats.mp3
+  freestyle.mp3
+  fukk-a-interview.mp3
+  made-for-this-shit.mp3
+  meltdown.mp3
+  mile-high-memories.mp3
+  milk.mp3
+  mist.mp3
+  money-in-the-grave.mp3
+  never-recover.mp3
+  nonstop.mp3
+  odisseia.mp3
+  os-melhores.mp3
+  plot-twist.mp3
+  questao-de-respeito.mp3
+  secondhand.mp3
+  slaughter.mp3
+  so-penso-em-tu-garota.mp3
+  star67.mp3
+  stick-to-the-models.mp3
+  stop-giving-me-advice.mp3
+  stop-trying-to-be-god.mp3
+  survival.mp3
+  talk-shit-like-a-preacher.mp3
+  throw-away.mp3
+  tic-tac-toe.mp3
+  titanium.mp3
+  whisper-my-name.mp3
+  xtranho.mp3
+  yesterday.mp3
