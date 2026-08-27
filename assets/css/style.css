@@ -587,344 +587,229 @@ select.field { appearance: none; cursor: pointer; }
   .form__row { grid-template-columns: 1fr; }
 }
 
-/* ---------------- Floating audio player (horizontal, iOS-style widget) ---------------- */
+/* ---------------- Floating music player (compact vertical card) ---------------- */
 .audio-player {
   position: fixed;
   top: 18px;
   left: 18px;
   z-index: 60;
   font-family: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --gp-bg: rgba(60, 58, 62, 0.55);
-  --gp-bg-soft: rgba(255, 255, 255, 0.14);
-  --gp-border: rgba(255, 255, 255, 0.22);
+  --gp-bg: rgba(58, 56, 60, 0.55);
+  --gp-soft: rgba(255, 255, 255, 0.16);
   --gp-text: #ffffff;
-  --gp-text-muted: rgba(255, 255, 255, 0.62);
-  --gp-accent: #4fa8ff;
+  --gp-muted: rgba(255, 255, 255, 0.62);
 }
 
-/* Collapsed round icon — crossfades into the expanded bar */
+/* Collapsed round icon */
 .audio-player__toggle {
   position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 1px solid var(--gp-border);
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   background: var(--gp-bg);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
   color: var(--gp-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s var(--ease), opacity 0.2s var(--ease);
 }
-.audio-player__toggle:hover { transform: scale(1.05); }
-.audio-player.is-open .audio-player__toggle {
-  opacity: 0;
-  transform: scale(0.8);
-  pointer-events: none;
-}
-
+.audio-player__toggle:hover { transform: scale(1.06); }
+.audio-player.is-open .audio-player__toggle { opacity: 0; pointer-events: none; }
 .audio-player__toggle-art {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  overflow: hidden;
+  display: grid; place-items: center;
 }
 .audio-player__toggle-img { width: 100%; height: 100%; object-fit: cover; }
 .audio-player__toggle .icon-note { width: 18px; height: 18px; fill: var(--gp-text); }
 .audio-player.is-playing .audio-player__toggle-art { opacity: 0.35; }
-
 .audio-player__bars {
   position: absolute;
   inset: 0;
   display: none;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   gap: 3px;
-  padding-bottom: 16px;
 }
 .audio-player.is-playing .audio-player__bars { display: flex; }
 .audio-player__bars i {
   width: 3px;
   background: var(--gp-text);
   border-radius: 2px;
-  animation: dq-bar 0.9s ease-in-out infinite;
+  animation: eq 0.9s ease-in-out infinite;
 }
-.audio-player__bars i:nth-child(1) { height: 6px; animation-delay: -0.6s; }
-.audio-player__bars i:nth-child(2) { height: 12px; animation-delay: -0.3s; }
-.audio-player__bars i:nth-child(3) { height: 8px; animation-delay: 0s; }
-@keyframes dq-bar {
-  0%, 100% { transform: scaleY(0.4); }
-  50% { transform: scaleY(1); }
-}
+.audio-player__bars i:nth-child(1) { height: 7px;  animation-delay: -0.6s; }
+.audio-player__bars i:nth-child(2) { height: 14px; animation-delay: -0.3s; }
+.audio-player__bars i:nth-child(3) { height: 9px;  animation-delay: 0s; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .audio-player__bars i { animation: none; } }
 
-/* Expanded widget — grows sideways from the same top-left anchor, so it
-   never drops down over the page content underneath it. */
-.audio-player__panel {
+/* Expanded card */
+.audio-player__card {
   position: absolute;
   top: 0;
   left: 0;
-  display: flex;
-  flex-direction: column;
-  width: max-content;
-  max-width: min(90vw, 480px);
-  padding: 8px 12px 10px;
-  border: 1px solid var(--gp-border);
-  border-radius: 25px;
-  background: linear-gradient(165deg, rgba(90, 88, 92, 0.6), rgba(40, 39, 42, 0.6));
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  width: 260px;
+  padding: 18px 18px 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--gp-bg);
+  backdrop-filter: blur(26px) saturate(1.4);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   color: var(--gp-text);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: scale(0.94);
   transform-origin: top left;
-  transition: opacity 0.22s var(--ease), transform 0.22s var(--ease), visibility 0.22s;
+  transform: scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s var(--ease), opacity 0.28s var(--ease);
 }
-.audio-player.is-open .audio-player__panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: scale(1);
-}
+.audio-player.is-open .audio-player__card { transform: scale(1); opacity: 1; pointer-events: auto; }
 
-.audio-player__row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.audio-player__close {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 26px; height: 26px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--gp-muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
 }
+.audio-player__close:hover { background: rgba(255, 255, 255, 0.22); color: var(--gp-text); }
 
 .audio-player__art {
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
+  width: 108px;
+  height: 108px;
+  margin: 4px auto 16px;
+  border-radius: 12px;
   overflow: hidden;
-  background: linear-gradient(150deg, #6b6b70, #2b2a2e);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 .audio-player__art-img { width: 100%; height: 100%; object-fit: cover; }
-.audio-player__art-fallback { width: 18px; height: 18px; fill: rgba(255, 255, 255, 0.7); }
+.audio-player__art-fallback { width: 34px; height: 34px; fill: rgba(255, 255, 255, 0.7); }
 
-.audio-player__meta {
-  min-width: 0;
-  max-width: 128px;
-  flex-shrink: 1;
-  /* Without this, flex items default to a content-based automatic
-     min-width, so the long "Track 1 (unavailable)" nowrap text was
-     forcing the box (and the whole bar) wider than max-width allowed,
-     which is why the widget grew past its intended size and started
-     overlapping the header logo. */
-  overflow: hidden;
-}
 .audio-player__title {
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--gp-text);
-  white-space: nowrap;
+  text-align: center;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .audio-player__artist {
-  margin-top: 2px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--gp-text-muted);
-  white-space: nowrap;
+  text-align: center;
+  margin-top: 3px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gp-muted);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .audio-player__controls {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
+  justify-content: center;
+  gap: 22px;
+  margin: 16px 0 4px;
 }
 .audio-player__btn {
   border: none;
-  background: var(--gp-bg-soft);
+  background: transparent;
   color: var(--gp-text);
   cursor: pointer;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.2s var(--ease), transform 0.15s var(--ease);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  transition: transform 0.15s var(--ease), opacity 0.15s var(--ease);
 }
-.audio-player__btn:hover { background: rgba(255, 255, 255, 0.24); transform: scale(1.06); }
-.audio-player__btn svg { width: 12px; height: 12px; fill: currentColor; }
+.audio-player__btn:hover { transform: scale(1.1); }
+.audio-player__btn svg { width: 22px; height: 22px; fill: currentColor; }
 .audio-player__btn--play {
-  width: 34px;
-  height: 34px;
-  background: var(--gp-text);
-  color: #1a1a1a;
+  width: 54px; height: 54px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
 }
-.audio-player__btn--play svg { width: 14px; height: 14px; }
-.audio-player__btn--play:hover { background: #ffffff; }
+.audio-player__btn--play svg { width: 26px; height: 26px; }
+.audio-player__btn--play:hover { background: rgba(255, 255, 255, 0.26); }
+
+.audio-player__seek-row { margin-top: 14px; }
+.audio-player__times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.audio-player__time {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gp-muted);
+}
 
 .audio-player__volume {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
+  gap: 12px;
+  margin-top: 14px;
 }
 .audio-player__btn--mute {
-  width: 22px;
-  height: 22px;
-  background: none;
+  width: 34px; height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  flex: none;
 }
-.audio-player__btn--mute svg { width: 12px; height: 12px; }
-.audio-player__volume-range { width: 46px; }
+.audio-player__btn--mute svg { width: 18px; height: 18px; }
+.audio-player__btn--mute:hover { background: rgba(255, 255, 255, 0.22); transform: none; }
 
-.audio-player__queue-toggle,
-.audio-player__close {
-  border: none;
-  background: none;
-  color: var(--gp-text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: color 0.15s var(--ease), background 0.15s var(--ease);
-}
-.audio-player__queue-toggle:hover,
-.audio-player__close:hover { color: var(--gp-text); background: rgba(255, 255, 255, 0.1); }
-.audio-player__queue-toggle svg { width: 14px; height: 14px; fill: currentColor; }
-.audio-player__close { font-size: 18px; line-height: 1; }
-
-.audio-player__seek-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-.audio-player__time {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--gp-text-muted);
-  min-width: 28px;
-}
-.audio-player__time--dur { text-align: right; }
-
+/* Sliders (seek + volume) */
 .audio-player__range,
 .audio-player__volume-range {
   -webkit-appearance: none;
   appearance: none;
-  flex: 1;
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.28);
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
   cursor: pointer;
 }
+.audio-player__range { display: block; }
+.audio-player__volume-range { flex: 1; }
 .audio-player__range::-webkit-slider-thumb,
 .audio-player__volume-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--gp-text);
-  cursor: pointer;
+  width: 14px; height: 14px;
+  border-radius: 999px;
+  background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 .audio-player__range::-moz-range-thumb,
 .audio-player__volume-range::-moz-range-thumb {
-  width: 11px;
-  height: 11px;
+  width: 14px; height: 14px;
   border: none;
-  border-radius: 50%;
-  background: var(--gp-text);
-  cursor: pointer;
-}
-.audio-player__volume-range { accent-color: var(--gp-accent); }
-
-.audio-player__list {
-  list-style: none;
-  max-height: 0;
-  overflow: hidden;
-  border-top: 1px solid transparent;
-  margin-top: 0;
-  transition: max-height 0.25s var(--ease), margin-top 0.25s var(--ease), border-color 0.25s var(--ease);
-}
-.audio-player.is-queue-open .audio-player__list {
-  max-height: 148px;
-  overflow-y: auto;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top-color: rgba(255, 255, 255, 0.16);
-}
-.audio-player__item {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 7px 8px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.15s var(--ease);
-}
-.audio-player__item:hover { background: rgba(255, 255, 255, 0.08); }
-.audio-player__item.is-active { background: rgba(255, 255, 255, 0.16); }
-.audio-player__item-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gp-text);
-}
-.audio-player__item-artist {
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--gp-text-muted);
-  white-space: nowrap;
-}
-
-/* Below this, the header's centered brand text has less room either
-   side, so keep the widget from ever reaching under it. */
-@media (max-width: 1100px) {
-  .audio-player__volume { display: none; }
+  border-radius: 999px;
+  background: #fff;
 }
 
 @media (max-width: 640px) {
-  /* Smaller wordmark on phones — the clamp() floor of 22px still read
-     too large next to the compact header on narrow screens. */
   .brand { font-size: 16px; letter-spacing: 0.04em; }
   .site-header { padding-top: 16px; padding-bottom: 16px; }
-
   .audio-player { top: 10px; left: 10px; }
-  /* There isn't enough room next to the collapsed icon to grow a wide
-     bar sideways without running under the header's logo or Contact
-     link, so on small screens the expanded widget instead drops down
-     below the header entirely — same tap-to-open icon, but it opens
-     as a tray under the header rather than squeezing into its row. */
-  .audio-player__panel {
-    top: 60px;
-    max-width: calc(100vw - 20px);
-    padding: 8px 12px 10px;
-  }
-  .audio-player__meta { min-width: 60px; max-width: 160px; }
-  .audio-player__row { gap: 8px; }
-  .audio-player__art { width: 36px; height: 36px; border-radius: 10px; }
-  .audio-player__controls { gap: 6px; }
-  .audio-player__btn { width: 26px; height: 26px; }
-  .audio-player__btn--play { width: 32px; height: 32px; }
-  .audio-player__queue-toggle,
-  .audio-player__close { width: 24px; height: 24px; }
+  /* Drop the expanded card just below the header on phones */
+  .audio-player__card { top: 52px; }
 }

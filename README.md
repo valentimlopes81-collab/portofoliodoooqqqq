@@ -40,22 +40,23 @@ and the rest of the site is blurred and darkened so clients can focus on the wor
   ```
 
 ## Music player (floating, top-left, on every page)
-A small round button in the top-left corner opens a floating player with
-play/pause, previous/next, a seek bar, volume, and a playlist. It keeps
-playing as visitors move between pages (position, volume and current track
-are remembered), though browsers may require one click before audio can
-resume automatically on a fresh page load — that's a browser autoplay rule,
-not a bug.
+A small round button in the top-left corner opens a compact "now playing"
+card: one play/pause toggle, previous/next, a draggable seek bar with times,
+and a speaker button that mutes on click plus a volume slider. There's no
+visible queue. It keeps playing as visitors move between pages (position,
+volume and current track are remembered), though browsers may require one
+click before audio can resume automatically on a fresh page load — that's a
+browser autoplay rule, not a bug.
 
 **How the songs are loaded:** the playlist is the `TRACKS` array at the top of
 `assets/js/audio-player.js`. Each entry points at a local `.mp3` file in
 `assets/audio/`. Full-length playback — the files play exactly as uploaded.
 
-**To add the music:** drop each `.mp3` into `assets/audio/` using the file
-name already set in `src` (see `assets/audio/README.txt` for the full list,
-e.g. `03-nonstop.mp3`). Nothing else to edit — the moment a file is present it
-plays. Optional per-track artwork: add a `cover:` path (jpg/png) to that
-entry; otherwise a music-note icon is shown.
+**To add the music:** drop each `.mp3` into `assets/audio/` and add a matching
+entry to `TRACKS` (`{ title, artist, src: 'assets/audio/your-file.mp3' }`). To
+remove a song, delete its file and its `TRACKS` entry. Optional per-track
+artwork: add a `cover:` path (jpg/png) to that entry; otherwise a music-note
+icon is shown.
 
 **To change the playlist:** edit `TRACKS` — reorder, add or remove entries
 freely (`{ title, artist, src }`). The player and the playlist list adapt

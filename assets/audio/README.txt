@@ -15,7 +15,6 @@ Current files:
   codeine-crazy.mp3
   ferias.mp3
   floor-seats.mp3
-  freestyle.mp3
   fukk-a-interview.mp3
   made-for-this-shit.mp3
   meltdown.mp3
@@ -25,7 +24,6 @@ Current files:
   money-in-the-grave.mp3
   never-recover.mp3
   nonstop.mp3
-  odisseia.mp3
   os-melhores.mp3
   plot-twist.mp3
   questao-de-respeito.mp3
