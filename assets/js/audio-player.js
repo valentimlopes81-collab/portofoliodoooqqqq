@@ -65,7 +65,7 @@ function start() {
   const NOTE = '<svg viewBox="0 0 24 24" class="icon-note"><path d="M9 18V5.5a1 1 0 0 1 .8-.98l9-1.8A1 1 0 0 1 20 3.7V16a3 3 0 1 1-2-2.83V6.42l-7 1.4V18a3 3 0 1 1-2 2.83V18Z"/></svg>';
 
   const root = document.createElement('div');
-  root.className = 'audio-player' + (startExpanded ? ' is-open' : '');
+  root.className = 'audio-player' + (startExpanded ? ' is-open' : '') + (startMuted ? ' is-muted' : '');
   root.innerHTML = `
     <button class="audio-player__toggle" aria-label="Music" aria-expanded="${startExpanded}">
       <span class="audio-player__toggle-art">
@@ -75,44 +75,46 @@ function start() {
       <span class="audio-player__bars" aria-hidden="true"><i></i><i></i><i></i></span>
     </button>
 
-    <div class="audio-player__card" role="region" aria-label="Music player">
-      <button class="audio-player__close" aria-label="Minimize player">&times;</button>
+    <div class="audio-player__bar" role="region" aria-label="Music player">
+      <div class="audio-player__row">
+        <div class="audio-player__art">
+          <img class="audio-player__art-img" alt="" hidden />
+          <svg class="audio-player__art-fallback icon-note" viewBox="0 0 24 24"><path d="M9 18V5.5a1 1 0 0 1 .8-.98l9-1.8A1 1 0 0 1 20 3.7V16a3 3 0 1 1-2-2.83V6.42l-7 1.4V18a3 3 0 1 1-2 2.83V18Z"/></svg>
+        </div>
 
-      <div class="audio-player__art">
-        <img class="audio-player__art-img" alt="" hidden />
-        <svg class="audio-player__art-fallback icon-note" viewBox="0 0 24 24"><path d="M9 18V5.5a1 1 0 0 1 .8-.98l9-1.8A1 1 0 0 1 20 3.7V16a3 3 0 1 1-2-2.83V6.42l-7 1.4V18a3 3 0 1 1-2 2.83V18Z"/></svg>
-      </div>
+        <div class="audio-player__meta">
+          <p class="audio-player__title">—</p>
+          <p class="audio-player__artist">—</p>
+        </div>
 
-      <p class="audio-player__title">—</p>
-      <p class="audio-player__artist">—</p>
+        <div class="audio-player__controls">
+          <button class="audio-player__btn" data-action="prev" aria-label="Previous track">
+            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6Zm3.5 6 10.5-6v12L9.5 12Z"/></svg>
+          </button>
+          <button class="audio-player__btn audio-player__btn--play" data-action="play" aria-label="Play">
+            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z"/></svg>
+          </button>
+          <button class="audio-player__btn" data-action="next" aria-label="Next track">
+            <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2V6Zm-2 6L3.5 6v12L14 12Z"/></svg>
+          </button>
+        </div>
 
-      <div class="audio-player__controls">
-        <button class="audio-player__btn" data-action="prev" aria-label="Previous track">
-          <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6V6Zm3.5 6 10.5-6v12L9.5 12Z"/></svg>
-        </button>
-        <button class="audio-player__btn audio-player__btn--play" data-action="play" aria-label="Play">
-          <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
-          <svg class="icon-pause" viewBox="0 0 24 24" hidden><path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z"/></svg>
-        </button>
-        <button class="audio-player__btn" data-action="next" aria-label="Next track">
-          <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2V6Zm-2 6L3.5 6v12L14 12Z"/></svg>
-        </button>
+        <div class="audio-player__volume">
+          <button class="audio-player__btn audio-player__btn--mute" data-action="mute" aria-label="Mute">
+            <svg class="icon-vol-on" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4V9Zm11.5 1.5c1 1 1 4 0 5m2.3-7.3c2 2 2 6.5 0 8.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+            <svg class="icon-vol-off" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4V9Zm12 1.5 4 4m0-4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <input type="range" class="audio-player__volume-range" min="0" max="100" value="${Math.round(startVolume * 100)}" aria-label="Volume" />
+        </div>
+
+        <button class="audio-player__close" aria-label="Minimize player">&times;</button>
       </div>
 
       <div class="audio-player__seek-row">
+        <span class="audio-player__time audio-player__time--cur">0:00</span>
         <input type="range" class="audio-player__range" min="0" max="1000" value="0" aria-label="Seek" />
-        <div class="audio-player__times">
-          <span class="audio-player__time audio-player__time--cur">0:00</span>
-          <span class="audio-player__time audio-player__time--dur">0:00</span>
-        </div>
-      </div>
-
-      <div class="audio-player__volume">
-        <button class="audio-player__btn audio-player__btn--mute" data-action="mute" aria-label="Mute">
-          <svg class="icon-vol-on" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4V9Zm11.5 1.5c1 1 1 4 0 5m2.3-7.3c2 2 2 6.5 0 8.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-          <svg class="icon-vol-off" viewBox="0 0 24 24" hidden><path d="M4 9h4l5-4v14l-5-4H4V9Zm12 1.5 4 4m0-4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
-        </button>
-        <input type="range" class="audio-player__volume-range" min="0" max="100" value="${Math.round(startVolume * 100)}" aria-label="Volume" />
+        <span class="audio-player__time audio-player__time--dur">0:00</span>
       </div>
     </div>
   `;
@@ -133,13 +135,9 @@ function start() {
   const titleEl = $('.audio-player__title');
   const artistEl = $('.audio-player__artist');
   const playBtn = $('[data-action="play"]');
-  const iconPlay = playBtn.querySelector('.icon-play');
-  const iconPause = playBtn.querySelector('.icon-pause');
   const prevBtn = $('[data-action="prev"]');
   const nextBtn = $('[data-action="next"]');
   const muteBtn = $('[data-action="mute"]');
-  const iconVolOn = muteBtn.querySelector('.icon-vol-on');
-  const iconVolOff = muteBtn.querySelector('.icon-vol-off');
   const volumeRange = $('.audio-player__volume-range');
   const seekRange = $('.audio-player__range');
   const curTimeEl = $('.audio-player__time--cur');
@@ -165,12 +163,17 @@ function start() {
     setArt(toggleImg, toggleFallback, t.cover);
   }
 
-  function setPlayingUI(playing) {
+  // Icon visibility is driven purely by root classes (see CSS), so only
+  // one of play/pause and one of sound/mute is ever shown.
+  const setPlayingUI = (playing) => {
     root.classList.toggle('is-playing', playing);
-    iconPlay.hidden = playing;
-    iconPause.hidden = !playing;
     playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
-  }
+  };
+  const updateMuteUI = () => {
+    const muted = audio.muted || audio.volume === 0;
+    root.classList.toggle('is-muted', muted);
+    muteBtn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+  };
 
   function loadTrack(i, { autoplay = false, time = 0 } = {}) {
     index = (i + TRACKS.length) % TRACKS.length;
@@ -217,7 +220,7 @@ function start() {
   audio.addEventListener('play', () => { setPlayingUI(true); saveState({ playing: true }); });
   audio.addEventListener('pause', () => { setPlayingUI(false); saveState({ playing: false }); });
 
-  // Draggable seek: preview time while dragging, apply on release.
+  // Draggable seek: preview while dragging, commit on release.
   seekRange.addEventListener('input', () => {
     seeking = true;
     if (audio.duration) curTimeEl.textContent = fmt((Number(seekRange.value) / 1000) * audio.duration);
@@ -227,21 +230,16 @@ function start() {
     seeking = false;
   });
 
-  function updateMuteIcon() {
-    const muted = audio.muted || audio.volume === 0;
-    iconVolOn.hidden = muted;
-    iconVolOff.hidden = !muted;
-  }
   volumeRange.addEventListener('input', () => {
     const v = Number(volumeRange.value) / 100;
     audio.volume = v;
     audio.muted = false;
-    updateMuteIcon();
+    updateMuteUI();
     saveState({ volume: v, muted: false });
   });
   muteBtn.addEventListener('click', () => {
     audio.muted = !audio.muted;
-    updateMuteIcon();
+    updateMuteUI();
     saveState({ muted: audio.muted });
   });
 
@@ -249,7 +247,7 @@ function start() {
   window.addEventListener('pagehide', () => saveState({ time: audio.currentTime, index, playing: !audio.paused }));
 
   updateMeta();
-  updateMuteIcon();
+  updateMuteUI();
   loadTrack(index, { time: startTime });
   if (wasPlaying) audio.play().then(() => setPlayingUI(true)).catch(() => setPlayingUI(false));
 }
