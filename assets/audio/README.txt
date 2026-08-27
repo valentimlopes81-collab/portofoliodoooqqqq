@@ -1,15 +1,11 @@
 AUDIO FILES
 ===========
 
-These .mp3 files are the site's music playlist, wired up in the TRACKS list
-at the top of assets/js/audio-player.js (full-length local playback).
+These .mp3 files are the site's playlist, wired up in the TRACKS list at the
+top of assets/js/audio-player.js. Each track's cover is the image with the
+same base name (e.g. nonstop.mp3 -> nonstop.jpg).
 
-To add a song: upload the .mp3 here, then add a matching entry to TRACKS
-({ title, artist, src: 'assets/audio/your-file.mp3' }). To remove one, delete
-its file and its TRACKS entry. Optional cover art: add a jpg/png and set a
-`cover:` path on that entry.
-
-Current files:
+Tracks (31):
   777-666.mp3
   9.mp3
   codeine-crazy.mp3
@@ -33,7 +29,6 @@ Current files:
   star67.mp3
   stick-to-the-models.mp3
   stop-giving-me-advice.mp3
-  stop-trying-to-be-god.mp3
   survival.mp3
   talk-shit-like-a-preacher.mp3
   throw-away.mp3
@@ -42,3 +37,35 @@ Current files:
   whisper-my-name.mp3
   xtranho.mp3
   yesterday.mp3
+
+Covers (30):
+  777-666.jpg
+  9.jpg
+  codeine-crazy.jpg
+  ferias.jpg
+  floor-seats.jpg
+  fukk-a-interview.jpg
+  made-for-this-shit.jpg
+  meltdown.jpg
+  mile-high-memories.jpg
+  milk.jpg
+  mist.jpg
+  money-in-the-grave.jpg
+  never-recover.jpg
+  nonstop.jpg
+  os-melhores.jpg
+  plot-twist.jpg
+  questao-de-respeito.jpg
+  secondhand.jpg
+  slaughter.jpg
+  so-penso-em-tu-garota.jpg
+  star67.jpg
+  stick-to-the-models.jpg
+  survival.jpg
+  talk-shit-like-a-preacher.jpg
+  throw-away.jpg
+  tic-tac-toe.jpg
+  titanium.jpg
+  whisper-my-name.jpg
+  xtranho.jpg
+  yesterday.jpg

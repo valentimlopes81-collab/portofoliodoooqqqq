@@ -36,7 +36,6 @@ const TRACKS = [
   { title: 'Titanium',                 artist: 'Dave',                                src: 'assets/audio/titanium.mp3', cover: 'assets/audio/titanium.jpg' },
   { title: 'Meltdown',                 artist: 'Travis Scott & Drake',                src: 'assets/audio/meltdown.mp3', cover: 'assets/audio/meltdown.jpg' },
   { title: 'Money in the Grave',       artist: 'Drake & Rick Ross',                   src: 'assets/audio/money-in-the-grave.mp3', cover: 'assets/audio/money-in-the-grave.jpg' },
-  { title: 'Stop Trying to Be God',    artist: 'Travis Scott',                        src: 'assets/audio/stop-trying-to-be-god.mp3', cover: 'assets/audio/stop-trying-to-be-god.jpg' },
   { title: 'Os Melhores',              artist: 'Matuê',                               src: 'assets/audio/os-melhores.mp3', cover: 'assets/audio/os-melhores.jpg' },
   { title: 'Xtranho',                  artist: 'Matuê & Brandão85',                   src: 'assets/audio/xtranho.mp3', cover: 'assets/audio/xtranho.jpg' },
   { title: '9',                        artist: 'Drake',                               src: 'assets/audio/9.mp3', cover: 'assets/audio/9.jpg' },
