@@ -11,7 +11,11 @@
 
   <!-- Header -->
   <header class="site-header">
-    <a href="index.html" class="brand">DOOOQQQQ</a>
+    <a href="index.html" class="brand" aria-label="DOOOQQQQ — home">
+      <img class="brand__logo" src="assets/img/logo.png" alt="DOOOQQQQ"
+           onerror="this.closest('.brand').classList.add('is-fallback');" />
+      <span class="brand__text">DOOOQQQQ</span>
+    </a>
     <div class="header__right">
       <a href="contact.html" class="btn-contact">Contact</a>
     </div>
