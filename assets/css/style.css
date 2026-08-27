@@ -641,12 +641,21 @@ select.field { appearance: none; cursor: pointer; }
 .audio-player.is-open .audio-player__toggle { opacity: 0; pointer-events: none; }
 .audio-player__toggle-art {
   position: relative;
-  width: 26px; height: 26px;
+  width: 30px; height: 30px;
   border-radius: 7px;
   overflow: hidden;
-  display: grid; place-items: center;
+  display: grid;
+  grid-template-areas: "stack";
+  place-items: center;
 }
-.audio-player__toggle-img { width: 100%; height: 100%; object-fit: cover; }
+.audio-player__toggle-img,
+.audio-player__toggle .icon-note { grid-area: stack; }
+.audio-player__toggle-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
 .audio-player__toggle .icon-note { width: 18px; height: 18px; fill: var(--gp-text); }
 .audio-player.is-playing .audio-player__toggle-art { opacity: 0.35; }
 .audio-player__bars {
@@ -693,15 +702,26 @@ select.field { appearance: none; cursor: pointer; }
   gap: 14px;
 }
 .audio-player__art {
-  width: 42px; height: 42px;
-  border-radius: 9px;
+  width: 52px; height: 52px;
+  border-radius: 10px;
   overflow: hidden;
   flex: none;
   background: rgba(255, 255, 255, 0.1);
-  display: grid; place-items: center;
+  display: grid;
+  grid-template-areas: "stack";
+  place-items: center;
 }
-.audio-player__art-img { width: 100%; height: 100%; object-fit: cover; }
-.audio-player__art-fallback { width: 18px; height: 18px; fill: rgba(255, 255, 255, 0.7); }
+/* Image and note occupy the same cell; the image, when present, sits on top
+   and fully covers the box so the note can never peek through. */
+.audio-player__art-img,
+.audio-player__art-fallback { grid-area: stack; }
+.audio-player__art-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+.audio-player__art-fallback { width: 20px; height: 20px; fill: rgba(255, 255, 255, 0.7); }
 
 .audio-player__meta {
   min-width: 96px;

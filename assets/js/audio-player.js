@@ -49,14 +49,33 @@ const TRACKS = [
 function start() {
   if (!TRACKS.length) return;
 
+  // ---- Random order, once per visit ----
+  // The playlist is shuffled the first time the site is opened in a tab and
+  // that order is kept while the visitor moves between pages (stored in
+  // sessionStorage). A new visit (new tab/session) reshuffles, so it doesn't
+  // always start in the same order it was added.
+  const ORDER_KEY = 'dq_order';
+  const shuffle = (n) => {
+    const a = [...Array(n).keys()];
+    for (let i = n - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  };
+  let order = null, freshOrder = false;
+  try { const s = JSON.parse(sessionStorage.getItem(ORDER_KEY) || 'null'); if (Array.isArray(s) && s.length === TRACKS.length) order = s; } catch (e) {}
+  if (!order) { order = shuffle(TRACKS.length); freshOrder = true; try { sessionStorage.setItem(ORDER_KEY, JSON.stringify(order)); } catch (e) {} }
+  const orig = TRACKS.slice();
+  TRACKS.splice(0, TRACKS.length, ...order.map((i) => orig[i]));
+
   const STORAGE_KEY = 'dq_player_state';
   const loadState = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) { return {}; } };
   const saveState = (partial) => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign(loadState(), partial))); } catch (e) {} };
 
   const state = loadState();
-  let index = Number.isInteger(state.index) && TRACKS[state.index] ? state.index : 0;
-  let wasPlaying = !!state.playing;
-  const startTime = typeof state.time === 'number' ? state.time : 0;
+  // On a fresh (reshuffled) visit, start at the top of the new order instead
+  // of resuming a saved position that now points at a different song.
+  let index = (!freshOrder && Number.isInteger(state.index) && TRACKS[state.index]) ? state.index : 0;
+  let wasPlaying = !freshOrder && !!state.playing;
+  const startTime = !freshOrder && typeof state.time === 'number' ? state.time : 0;
   const startVolume = typeof state.volume === 'number' ? state.volume : 0.8;
   const startMuted = !!state.muted;
   const startExpanded = typeof state.expanded === 'boolean' ? state.expanded : (window.innerWidth > 640);
@@ -149,6 +168,10 @@ function start() {
 
   function setArt(imgEl, fallbackEl, src) {
     if (!src) { imgEl.hidden = true; fallbackEl.hidden = false; return; }
+    // Assume the cover will load: show the image and hide the note right away
+    // (prevents the note peeking through). Only fall back on a real error.
+    imgEl.hidden = false;
+    fallbackEl.hidden = true;
     imgEl.onload = () => { imgEl.hidden = false; fallbackEl.hidden = true; };
     imgEl.onerror = () => { imgEl.hidden = true; fallbackEl.hidden = false; };
     imgEl.src = src;
