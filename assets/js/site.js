@@ -76,6 +76,7 @@
     gallery = null;
     if (type === 'gallery') {
       openGallery(item);
+      addCaption(item);
       lb.classList.add('open');
       document.body.classList.add('lb-open');
       return;
@@ -96,8 +97,19 @@
       media.appendChild(img);
       buildMeta(item);
     }
+    addCaption(item);
     lb.classList.add('open');
     document.body.classList.add('lb-open');
+  }
+
+  // One-line title shown at the bottom of the lightbox when a work is opened.
+  function addCaption(item) {
+    const t = item.dataset.title;
+    if (!t) return;
+    const cap = document.createElement('span');
+    cap.className = 'lightbox__caption';
+    cap.textContent = t;
+    media.appendChild(cap);
   }
 
   function close() {

@@ -26,25 +26,31 @@
     </section>
 
     <section class="wrap">
-      <div class="grid grid--stills">
-        <!-- Design 1 — carousel of every CARTAZ file (cover: CARTAZ FINAL) -->
-        <div class="item item--photo" data-type="gallery"
+      <!-- Masonry ("tetris") layout: tiles keep their natural proportions and
+           pack together, so mixed formats sit side by side. The title shows
+           only when a work is opened (one line at the bottom of the viewer). -->
+      <div class="grid--masonry">
+        <!-- Carousel of every CARTAZ file (cover: CARTAZ FINAL) -->
+        <div class="item item--tile" data-type="gallery" data-title="FLYER EVENTO CENA"
              data-images="assets/design/CARTAZ%20FINAL.png|assets/design/CARTAZ%20DJ%20DADDA.png|assets/design/CARTAZ%20DJ%20MONZZ%20(1).png|assets/design/CARTAZ%20DJ%20TEE%20(1).png|assets/design/CARTAZ%20SIPPINPURPP.png|assets/design/YURI%20CARTAZ%20FACE%201%20(1).png">
-          <img src="assets/design/CARTAZ%20FINAL.png" alt="Flyer evento CENA" />
-          <div class="item__overlay">
-            <span class="item__title">FLYER EVENTO CENA</span>
-          </div>
+          <img src="assets/design/CARTAZ%20FINAL.png" alt="Flyer evento CENA" loading="lazy" />
         </div>
 
-        <!-- Design 2 — branding carousel; background swaps per slide so each
-             transparent PNG stays visible -->
-        <div class="item item--photo" data-type="gallery"
-             data-images="assets/design/CENA%20CARACTHER%20CHROME.png|assets/design/CENA%20CARACTHER%201%20(1).png|assets/design/logo%20cena%20sem%20background%20white.png|assets/design/logo%20cena%20sem%20background.png"
-             data-bgs="#111111|#111111|#111111|#ededed">
-          <img src="assets/design/CENA%20CARACTHER%20CHROME.png" alt="Branding" />
-          <div class="item__overlay">
-            <span class="item__title">BRANDING</span>
-          </div>
+        <!-- Digital print: design + real example -->
+        <div class="item item--tile" data-type="gallery" data-title="DIGITAL PRINT"
+             data-images="assets/design/cover-design.jpg|assets/design/longsleeve.png">
+          <img src="assets/design/cover-design.jpg" alt="Digital print" loading="lazy" />
+        </div>
+
+        <!-- Screen print: design + real example -->
+        <div class="item item--tile" data-type="gallery" data-title="SCREEN PRINT"
+             data-images="assets/design/Cena_Design_1_VIEW.png|assets/design/DSCF4157.JPG">
+          <img src="assets/design/Cena_Design_1_VIEW.png" alt="Screen print" loading="lazy" />
+        </div>
+
+        <!-- Single image, no title -->
+        <div class="item item--tile" data-type="image" data-full="assets/design/design%20espelho.png">
+          <img src="assets/design/design%20espelho.png" alt="" loading="lazy" />
         </div>
       </div>
     </section>

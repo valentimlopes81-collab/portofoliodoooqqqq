@@ -249,6 +249,32 @@ main { flex: 1 0 auto; width: 100%; }
 }
 .item:hover img { transform: scale(1.04); }
 
+/* Masonry ("tetris") layout — mixed formats packing together. Tiles keep
+   their natural proportions and flow down balanced columns. */
+.grid--masonry {
+  column-count: 3;
+  column-gap: clamp(10px, 1.4vw, 22px);
+  padding-bottom: clamp(60px, 10vh, 120px);
+}
+@media (max-width: 900px) { .grid--masonry { column-count: 2; } }
+@media (max-width: 560px) { .grid--masonry { column-count: 1; } }
+.grid--masonry .item {
+  width: 100%;
+  margin: 0 0 clamp(10px, 1.4vw, 22px);
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+}
+.item--tile {
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.item--tile img {
+  width: 100%;
+  height: auto;      /* keep the file's natural proportions */
+  display: block;
+  object-fit: contain;
+}
+
 /* Scroll reveal */
 .reveal {
   opacity: 0;
@@ -411,7 +437,7 @@ body.lb-open .site-footer {
 .lightbox__arrow--next { right: clamp(-6px, -3vw, -24px); }
 .lightbox__count {
   position: absolute;
-  bottom: clamp(8px, 2vw, 16px);
+  top: clamp(8px, 2vw, 16px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
@@ -423,6 +449,27 @@ body.lb-open .site-footer {
   padding: 4px 12px;
   border-radius: 999px;
   pointer-events: none;
+}
+/* One-line title shown at the bottom of the opened work */
+.lightbox__caption {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(10px, 2.5vw, 20px);
+  transform: translateX(-50%);
+  z-index: 3;
+  max-width: 92%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: clamp(13px, 1.6vw, 18px);
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 7px 18px;
+  border-radius: 999px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
 }
 @media (max-width: 560px) {
   .lightbox__arrow--prev { left: 4px; }
