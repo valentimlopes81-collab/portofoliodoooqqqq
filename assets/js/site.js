@@ -10,6 +10,16 @@
 (function () {
   let lb, media, closeBtn, io;
 
+  // Turn a YouTube/Vimeo link into an autoplay embed URL (leave anything
+  // that already looks like an embed URL untouched).
+  function toEmbedUrl(url) {
+    let m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+    if (m) return 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0';
+    m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (m) return 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
+    return url;
+  }
+
   function buildMeta(item) {
     const left = [item.dataset.camera, item.dataset.lens].filter(Boolean).join(' — ');
     const right = [
@@ -82,7 +92,17 @@
       return;
     }
     if (type === 'video') {
-      if (src && /\.(mp4|webm|mov)$/i.test(src)) {
+      const embed = item.dataset.embed;
+      if (embed) {
+        const wrap = document.createElement('div');
+        wrap.className = 'lightbox__embed';
+        const ifr = document.createElement('iframe');
+        ifr.src = toEmbedUrl(embed);
+        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+        ifr.allowFullscreen = true;
+        wrap.appendChild(ifr);
+        media.appendChild(wrap);
+      } else if (src && /\.(mp4|webm|mov)$/i.test(src)) {
         const v = document.createElement('video');
         v.src = src; v.controls = true; v.autoplay = true; v.playsInline = true;
         media.appendChild(v);
