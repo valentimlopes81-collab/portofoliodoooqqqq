@@ -14,7 +14,7 @@
   // that already looks like an embed URL untouched).
   function toEmbedUrl(url) {
     let m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
-    if (m) return 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0';
+    if (m) return 'https://www.youtube-nocookie.com/embed/' + m[1] + '?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0';
     m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
     if (m) return 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
     return url;
