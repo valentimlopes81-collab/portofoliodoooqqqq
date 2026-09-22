@@ -31,12 +31,18 @@
     </section>
 
     <section class="wrap">
-      <div class="grid grid--wide">
+      <!-- Masonry ("tetris") layout, same as Design/Stills: each tile keeps
+           its own proportions so different video formats pack together
+           instead of being forced into one uniform box. Video posters are
+           still cropped to 16:9 (see .grid--masonry .item--video img in
+           style.css) so any letterboxing/black bars on the thumbnail get
+           cut — the lightbox itself always plays the full, uncropped video. -->
+      <div class="grid--masonry grid--masonry--video">
         <!-- CENA CAPSULE — plays the uploaded .MOV in the lightbox. For a real
              thumbnail, upload a poster still (e.g. cena-capsule.jpg) and point
              data-poster + the <img> at it. Large future films: use
              data-embed="https://youtu.be/XXXX" instead of uploading. -->
-        <div class="item item--video" data-type="video"
+        <div class="item item--tile item--video" data-type="video"
              data-poster="assets/img/film-1-frame.jpg" data-full="assets/film/CENA%202NDTEASER.MOV">
           <img src="assets/img/film-1-frame.jpg" alt="Cena Capsule" />
           <span class="item__play" aria-hidden="true"></span>
@@ -47,7 +53,7 @@
           </div>
         </div>
 
-        <div class="item item--video" data-type="video"
+        <div class="item item--tile item--video" data-type="video"
              data-poster="https://img.youtube.com/vi/cR1ygqvsfUk/maxresdefault.jpg"
              data-embed="https://youtu.be/cR1ygqvsfUk">
           <img src="https://img.youtube.com/vi/cR1ygqvsfUk/maxresdefault.jpg" alt="Film" />

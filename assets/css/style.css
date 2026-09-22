@@ -284,6 +284,23 @@ main { flex: 1 0 auto; width: 100%; }
   display: block;
   object-fit: contain;
 }
+/* Video tiles inside a tetris grid: crop the thumbnail to a clean 16:9 (so
+   a poster with letterboxing/black bars from a non-16:9 source shows just
+   the frame, not the padding) instead of showing the poster's raw natural
+   size. The lightbox itself is untouched — opening the tile still plays
+   the full, uncropped video. */
+.grid--masonry .item--video { height: auto; }
+.grid--masonry .item--video img {
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+}
+/* Video tiles carry permanent overlay text (title/role), unlike Design's or
+   Stills' tiles — so keep a single full-width column on phones, where a
+   narrower column would wrap that text past the tile's height and clip it. */
+@media (max-width: 700px) {
+  .grid--masonry--video { column-count: 1; }
+}
 
 /* Scroll reveal */
 .reveal {
