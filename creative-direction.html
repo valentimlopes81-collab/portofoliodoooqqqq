@@ -32,41 +32,16 @@
 
     <section class="wrap">
       <div class="grid grid--wide">
-        <div class="item item--video" data-type="video"
-             data-poster="https://img.youtube.com/vi/T-s3qNXQ3Kk/maxresdefault.jpg"
-             data-embed="https://youtu.be/T-s3qNXQ3Kk">
+        <!-- Carousel: slide 1 is the announcement video, slide 2+ are the
+             presentation PDF pages (as images) — data-slides entries prefixed
+             "video:" open as an embed, plain paths open as images. -->
+        <div class="item item--video" data-type="gallery"
+             data-slides="video:https://youtu.be/T-s3qNXQ3Kk">
           <img src="https://img.youtube.com/vi/T-s3qNXQ3Kk/maxresdefault.jpg" alt="CENA Launching Party Announcement" />
           <span class="item__play" aria-hidden="true"></span>
           <div class="item__overlay">
             <span class="item__title">CENA LAUNCHING PARTY ANNOUNCEMENT</span>
-          </div>
-        </div>
-        <div class="item item--video" data-type="image" data-full="assets/img/creative-1.svg">
-          <img src="assets/img/creative-1.svg" alt="" />
-          <div class="item__overlay">
-            <span class="item__title">Project Title</span>
-            <span class="item__role">Campaign · Creative Director</span>
-          </div>
-        </div>
-        <div class="item item--video" data-type="image" data-full="assets/img/creative-2.svg">
-          <img src="assets/img/creative-2.svg" alt="" />
-          <div class="item__overlay">
-            <span class="item__title">Project Title</span>
-            <span class="item__role">Brand World · Art Direction</span>
-          </div>
-        </div>
-        <div class="item item--video" data-type="image" data-full="assets/img/creative-3.svg">
-          <img src="assets/img/creative-3.svg" alt="" />
-          <div class="item__overlay">
-            <span class="item__title">Project Title</span>
-            <span class="item__role">Launch · Concept &amp; Direction</span>
-          </div>
-        </div>
-        <div class="item item--video" data-type="image" data-full="assets/img/creative-4.svg">
-          <img src="assets/img/creative-4.svg" alt="" />
-          <div class="item__overlay">
-            <span class="item__title">Project Title</span>
-            <span class="item__role">Editorial · Creative Direction</span>
+            <span class="item__role">Creative Director</span>
           </div>
         </div>
       </div>

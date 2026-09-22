@@ -44,12 +44,15 @@
 
   let gallery = null; // { show(n), len } while a carousel is open
 
+  // Slides come from data-slides (mixed video/image, "video:<url>" prefix
+  // marks an embed) or the older data-images (image-only galleries).
   function openGallery(item) {
-    const imgs = (item.dataset.images || '').split('|').filter(Boolean);
+    const slides = (item.dataset.slides || item.dataset.images || '').split('|').filter(Boolean);
     const bgs = (item.dataset.bgs || '').split('|');
-    if (!imgs.length) return;
+    if (!slides.length) return;
 
-    const img = document.createElement('img');
+    const stage = document.createElement('div');
+    stage.className = 'lightbox__stage';
     const prev = document.createElement('button');
     const next = document.createElement('button');
     prev.className = 'lightbox__arrow lightbox__arrow--prev';
@@ -61,20 +64,37 @@
 
     let i = 0;
     function show(n) {
-      i = (n + imgs.length) % imgs.length;
-      img.src = imgs[i];
-      const bg = (bgs[i] || '').trim();
-      media.classList.toggle('lightbox__media--pad', !!bg);
-      media.style.background = bg || '';
-      count.textContent = (i + 1) + ' / ' + imgs.length;
+      i = (n + slides.length) % slides.length;
+      stage.innerHTML = '';
+      media.classList.remove('lightbox__media--pad');
+      media.style.background = '';
+      const slide = slides[i];
+      if (slide.startsWith('video:')) {
+        const wrap = document.createElement('div');
+        wrap.className = 'lightbox__embed';
+        const ifr = document.createElement('iframe');
+        ifr.src = toEmbedUrl(slide.slice(6));
+        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+        ifr.allowFullscreen = true;
+        wrap.appendChild(ifr);
+        stage.appendChild(wrap);
+      } else {
+        const img = document.createElement('img');
+        img.src = slide;
+        const bg = (bgs[i] || '').trim();
+        media.classList.toggle('lightbox__media--pad', !!bg);
+        media.style.background = bg || '';
+        stage.appendChild(img);
+      }
+      count.textContent = (i + 1) + ' / ' + slides.length;
     }
     prev.addEventListener('click', (e) => { e.stopPropagation(); show(i - 1); });
     next.addEventListener('click', (e) => { e.stopPropagation(); show(i + 1); });
 
-    if (imgs.length > 1) { media.appendChild(prev); media.appendChild(next); media.appendChild(count); }
-    media.appendChild(img);
+    if (slides.length > 1) { media.appendChild(prev); media.appendChild(next); media.appendChild(count); }
+    media.appendChild(stage);
     show(0);
-    gallery = { show: (d) => show(i + d), len: imgs.length };
+    gallery = { show: (d) => show(i + d), len: slides.length };
   }
 
   function open(item) {
