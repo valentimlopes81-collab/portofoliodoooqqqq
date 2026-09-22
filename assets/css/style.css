@@ -284,14 +284,17 @@ main { flex: 1 0 auto; width: 100%; }
   display: block;
   object-fit: contain;
 }
-/* Video tiles inside a tetris grid: crop the thumbnail to a clean 16:9 (so
+/* Video tiles inside a tetris grid: crop the thumbnail to a clean shape (so
    a poster with letterboxing/black bars from a non-16:9 source shows just
    the frame, not the padding) instead of showing the poster's raw natural
-   size. The lightbox itself is untouched — opening the tile still plays
-   the full, uncropped video. */
+   size. Defaults to 16:9; set style="--poster-ratio: 4 / 5" (or whatever
+   fits) on an .item--video whose source is a different shape, e.g. a
+   vertical/portrait video whose auto-generated thumbnail is pillarboxed.
+   The lightbox itself is untouched either way — opening the tile always
+   plays the full, uncropped video, bars and all, in its normal shape. */
 .grid--masonry .item--video { height: auto; }
 .grid--masonry .item--video img {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--poster-ratio, 16 / 9);
   height: auto;
   object-fit: cover;
 }
