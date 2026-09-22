@@ -44,6 +44,28 @@ const TRACKS = [
   { title: 'Star67',                   artist: 'Drake',                               src: 'assets/audio/star67.mp3', cover: 'assets/audio/star67.jpg' },
   { title: 'Stop Giving Me Advice',    artist: 'Lyrical Lemonade, Jack Harlow & Dave',src: 'assets/audio/stop-giving-me-advice.mp3', cover: 'assets/audio/stop-giving-me-advice.jpg' },
   { title: 'Survival',                 artist: 'Drake',                               src: 'assets/audio/survival.mp3', cover: 'assets/audio/survival.jpg' },
+
+  { title: 'Tz Da Coronel',            artist: 'Glocks & Bersa',                      src: 'assets/audio/glocks-bersa-tz-da-coronel.mp3', cover: 'assets/audio/glocks-e-bersa.jpeg' },
+  { title: 'Cold Shoulder',            artist: 'Drake feat. Don Toliver',             src: 'assets/audio/drake-cold-shoulder.mp3', cover: 'assets/audio/drake-fomo.jpg' },
+  { title: 'Blue Green Red',           artist: 'Drake',                               src: 'assets/audio/drake-blue-green-red.mp3', cover: 'assets/audio/100-gigs.jpeg' },
+  { title: 'Circadian Rhythm',         artist: 'Drake',                               src: 'assets/audio/drake-circadian-rhythm.mp3', cover: 'assets/audio/100-gigs.jpeg' },
+  { title: 'No Face',                  artist: 'Drake',                               src: 'assets/audio/drake-no-face.mp3', cover: 'assets/audio/100-gigs.jpeg' },
+  { title: "Choosin' Texas (Remix)",   artist: 'Drake, Don Toliver & Ella Langley',   src: 'assets/audio/drake-choosin-texas-remix.mp3', cover: 'assets/audio/drake-fomo.jpg' },
+  { title: 'Max Win',                  artist: 'Isak, Zigarro & Armando Teles',       src: 'assets/audio/isak-zigarro-armando-teles-max-win.mp3', cover: 'assets/audio/max-win.png' },
+  { title: 'Sete Vidas',               artist: 'Isak, Zigarro & Armando Teles',       src: 'assets/audio/isak-zigarro-armando-teles-sete-vidas.mp3', cover: 'assets/audio/jon.png' },
+  { title: 'Cínicos',                  artist: 'LON3R JOHNY',                         src: 'assets/audio/lon3r-johny-cinicos.mp3', cover: 'assets/audio/cinicos.jpeg' },
+  { title: 'A Morte do Autotune',      artist: 'Matuê',                               src: 'assets/audio/matue-a-morte-do-autotune.mp3', cover: 'assets/audio/morte-do-autotune.jpeg' },
+  { title: 'Fim Do Nada',              artist: 'Mizzy Miles, T-Rex & Zara G',         src: 'assets/audio/mizzy-miles-fim-do-nada.mp3', cover: 'assets/audio/fim-do-nada.jpeg' },
+  { title: 'Eu Sou A Sh!t',            artist: 'Norty',                               src: 'assets/audio/norty-eu-sou-a-shit.mp3', cover: 'assets/audio/eu-sou-a-shit.jpeg' },
+  { title: 'Guttmann',                 artist: 'Norty',                               src: 'assets/audio/norty-guttmann.mp3', cover: 'assets/audio/guttman.jpeg' },
+  { title: 'Champagne',                artist: 'Orochi, PL Quest, BIN, Kizzy & Mainstreet', src: 'assets/audio/orochi-champagne.mp3', cover: 'assets/audio/champagne.jpeg' },
+  { title: 'Tango',                    artist: 'Supernova Ent, Ghard, G.A, Veigh & Niink', src: 'assets/audio/supernova-ent-tango.mp3', cover: 'assets/audio/supernova.jpeg' },
+  { title: 'CRXSHOUT',                 artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-crxshout.mp3', cover: 'assets/audio/crsxhout.jpeg' },
+  { title: 'ESTÁBULO',                 artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-estabulo.mp3', cover: 'assets/audio/estabulo.jpeg' },
+  { title: 'G-$TAR',                   artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-g-star.mp3', cover: 'assets/audio/pele-e-osso.jpeg' },
+  { title: 'Fashion Safari',           artist: 'xandre',                              src: 'assets/audio/xandre-fashion-safari.mp3', cover: 'assets/audio/xandre.jpeg' },
+  { title: 'Nouveau Riche',            artist: 'xandre',                              src: 'assets/audio/xandre-nouveau-riche.mp3', cover: 'assets/audio/xandre.jpeg' },
+  { title: '5 Figures',                artist: 'xandre, SKURTY & G6Revy',             src: 'assets/audio/xandre-5-figures.mp3', cover: 'assets/audio/xandre.jpeg' },
 ];
 
 function start() {
