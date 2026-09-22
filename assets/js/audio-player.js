@@ -46,6 +46,8 @@ const TRACKS = [
   { title: 'Survival',                 artist: 'Drake',                               src: 'assets/audio/survival.mp3', cover: 'assets/audio/survival.jpg' },
 
   { title: 'Tz Da Coronel',            artist: 'Glocks & Bersa',                      src: 'assets/audio/glocks-bersa-tz-da-coronel.mp3', cover: 'assets/audio/glocks-e-bersa.jpeg' },
+  { title: 'Hun43rd',                  artist: 'A$AP Rocky',                          src: 'assets/audio/asap-rocky-hun43rd.mp3', cover: 'assets/audio/asap-rocky-testing.jpeg' },
+  { title: 'Fukk Sleep',               artist: 'A$AP Rocky feat. FKA twigs',          src: 'assets/audio/asap-rocky-fukk-sleep.mp3', cover: 'assets/audio/asap-rocky-testing.jpeg' },
   { title: 'Cold Shoulder',            artist: 'Drake feat. Don Toliver',             src: 'assets/audio/drake-cold-shoulder.mp3', cover: 'assets/audio/drake-fomo.jpg' },
   { title: 'Blue Green Red',           artist: 'Drake',                               src: 'assets/audio/drake-blue-green-red.mp3', cover: 'assets/audio/100-gigs.jpeg' },
   { title: 'Circadian Rhythm',         artist: 'Drake',                               src: 'assets/audio/drake-circadian-rhythm.mp3', cover: 'assets/audio/100-gigs.jpeg' },
