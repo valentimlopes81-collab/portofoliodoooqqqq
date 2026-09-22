@@ -65,6 +65,8 @@ const TRACKS = [
   { title: 'CRXSHOUT',                 artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-crxshout.mp3', cover: 'assets/audio/crsxhout.jpeg' },
   { title: 'ESTÁBULO',                 artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-estabulo.mp3', cover: 'assets/audio/estabulo.jpeg' },
   { title: 'G-$TAR',                   artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-g-star.mp3', cover: 'assets/audio/pele-e-osso.jpeg' },
+  { title: 'Ninguém',                  artist: 'Yuri NR5',                            src: 'assets/audio/yuri-nr5-ninguem.mp3', cover: 'assets/audio/pele-e-osso.jpeg' },
+  { title: 'Mundo Todo x Nightime',    artist: 'Yuri NR5',                            src: 'assets/audio/mundo-todo-x-nightime.mp3', cover: 'assets/audio/mundo-tudo.jpeg' },
   { title: 'Fashion Safari',           artist: 'xandre',                              src: 'assets/audio/xandre-fashion-safari.mp3', cover: 'assets/audio/xandre.jpeg' },
   { title: 'Nouveau Riche',            artist: 'xandre',                              src: 'assets/audio/xandre-nouveau-riche.mp3', cover: 'assets/audio/xandre.jpeg' },
   { title: '5 Figures',                artist: 'xandre, SKURTY & G6Revy',             src: 'assets/audio/xandre-5-figures.mp3', cover: 'assets/audio/xandre.jpeg' },
