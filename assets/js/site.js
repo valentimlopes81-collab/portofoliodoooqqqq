@@ -235,10 +235,27 @@
     }
   }
 
+  // The footer's Gmail "compose" deep link (?view=cm&...) only works on
+  // desktop web Gmail — on a phone it just opens the inbox instead of a
+  // prefilled draft. A plain mailto: link is what actually opens a
+  // prefilled draft on mobile (in Mail, Gmail, or whatever's the default),
+  // so swap to it there while leaving the desktop link untouched.
+  function fixMobileEmailLink() {
+    if (!window.matchMedia('(pointer: coarse)').matches) return;
+    document.querySelectorAll('a.social[href*="mail.google.com/mail"]').forEach((a) => {
+      const url = new URL(a.href);
+      const to = url.searchParams.get('to');
+      const su = url.searchParams.get('su');
+      if (!to) return;
+      a.href = 'mailto:' + to + (su ? '?subject=' + encodeURIComponent(su) : '');
+    });
+  }
+
   // (Re)bind gallery items and scroll-reveal for the current DOM.
   function initSite() {
     buildLightboxOnce();
     if (lb.classList.contains('open')) close();
+    fixMobileEmailLink();
 
     document.querySelectorAll('.item').forEach((item) => {
       if (item.dataset.bound) return;
