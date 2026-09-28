@@ -53,6 +53,7 @@ const TRACKS = [
   { title: 'Circadian Rhythm',         artist: 'Drake',                               src: 'assets/audio/drake-circadian-rhythm.mp3', cover: 'assets/audio/100-gigs.jpeg' },
   { title: 'No Face',                  artist: 'Drake',                               src: 'assets/audio/drake-no-face.mp3', cover: 'assets/audio/100-gigs.jpeg' },
   { title: "Choosin' Texas (Remix)",   artist: 'Drake, Don Toliver & Ella Langley',   src: 'assets/audio/drake-choosin-texas-remix.mp3', cover: 'assets/audio/drake-fomo.jpg' },
+  { title: 'Free',                     artist: 'Drake',                               src: 'assets/audio/drake-free.mp3', cover: 'assets/audio/drake-fomo.jpg' },
   { title: 'Max Win',                  artist: 'Isak, Zigarro & Armando Teles',       src: 'assets/audio/isak-zigarro-armando-teles-max-win.mp3', cover: 'assets/audio/max-win.png' },
   { title: 'Sete Vidas',               artist: 'Isak, Zigarro & Armando Teles',       src: 'assets/audio/isak-zigarro-armando-teles-sete-vidas.mp3', cover: 'assets/audio/jon.png' },
   { title: 'Cínicos',                  artist: 'LON3R JOHNY',                         src: 'assets/audio/lon3r-johny-cinicos.mp3', cover: 'assets/audio/cinicos.jpeg' },
