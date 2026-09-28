@@ -45,7 +45,7 @@ const TRACKS = [
   { title: 'Stop Giving Me Advice',    artist: 'Lyrical Lemonade, Jack Harlow & Dave',src: 'assets/audio/stop-giving-me-advice.mp3', cover: 'assets/audio/stop-giving-me-advice.jpg' },
   { title: 'Survival',                 artist: 'Drake',                               src: 'assets/audio/survival.mp3', cover: 'assets/audio/survival.jpg' },
 
-  { title: 'Tz Da Coronel',            artist: 'Glocks & Bersa',                      src: 'assets/audio/glocks-bersa-tz-da-coronel.mp3', cover: 'assets/audio/glocks-e-bersa.jpeg' },
+  { title: 'Glocks & Bersa',            artist: 'Tz Da Coronel',                      src: 'assets/audio/glocks-bersa-tz-da-coronel.mp3', cover: 'assets/audio/glocks-e-bersa.jpeg' },
   { title: 'Hun43rd',                  artist: 'A$AP Rocky',                          src: 'assets/audio/asap-rocky-hun43rd.mp3', cover: 'assets/audio/asap-rocky-testing.jpeg' },
   { title: 'Fukk Sleep',               artist: 'A$AP Rocky feat. FKA twigs',          src: 'assets/audio/asap-rocky-fukk-sleep.mp3', cover: 'assets/audio/asap-rocky-testing.jpeg' },
   { title: 'Cold Shoulder',            artist: 'Drake feat. Don Toliver',             src: 'assets/audio/drake-cold-shoulder.mp3', cover: 'assets/audio/drake-fomo.jpg' },
@@ -203,12 +203,30 @@ function start() {
     imgEl.src = src;
   }
 
+  // Lock-screen / notification "Now Playing" card. Without this, Safari
+  // guesses at metadata itself — using the page title, the circular
+  // (transparent-cornered) favicon, and generic skip-10s buttons instead
+  // of prev/next. Setting it explicitly fixes all three.
+  function updateMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    const t = TRACKS[index];
+    const src = t.cover || 'assets/img/apple-touch-icon.png';
+    const type = /\.png$/i.test(src) ? 'image/png' : /\.jpe?g$/i.test(src) ? 'image/jpeg' : undefined;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: t.title,
+      artist: t.artist || '',
+      album: 'DOOOQQQQ',
+      artwork: [{ src, sizes: '512x512', type }],
+    });
+  }
+
   function updateMeta() {
     const t = TRACKS[index];
     titleEl.textContent = t.title;
     artistEl.textContent = t.artist || '';
     setArt(artImg, artFallback, t.cover);
     setArt(toggleImg, toggleFallback, t.cover);
+    updateMediaSession();
   }
 
   // Icon visibility is driven purely by root classes (see CSS), so only
@@ -253,6 +271,15 @@ function start() {
   prevBtn.addEventListener('click', () => loadTrack(index - 1, { autoplay: !audio.paused || wasPlaying }));
   nextBtn.addEventListener('click', () => loadTrack(index + 1, { autoplay: !audio.paused || wasPlaying }));
 
+  // Same prev/next behaviour from the lock screen / notification controls,
+  // instead of the browser's default skip-10-seconds fallback.
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', play);
+    navigator.mediaSession.setActionHandler('pause', pause);
+    navigator.mediaSession.setActionHandler('previoustrack', () => loadTrack(index - 1, { autoplay: true }));
+    navigator.mediaSession.setActionHandler('nexttrack', () => loadTrack(index + 1, { autoplay: true }));
+  }
+
   audio.addEventListener('ended', () => loadTrack(index + 1, { autoplay: true }));
   audio.addEventListener('error', () => {
     titleEl.textContent = `${TRACKS[index].title} (missing)`;
@@ -265,8 +292,14 @@ function start() {
     curTimeEl.textContent = fmt(audio.currentTime);
   });
   audio.addEventListener('loadedmetadata', () => { durTimeEl.textContent = fmt(audio.duration); });
-  audio.addEventListener('play', () => { setPlayingUI(true); saveState({ playing: true }); });
-  audio.addEventListener('pause', () => { setPlayingUI(false); saveState({ playing: false }); });
+  audio.addEventListener('play', () => {
+    setPlayingUI(true); saveState({ playing: true });
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+  });
+  audio.addEventListener('pause', () => {
+    setPlayingUI(false); saveState({ playing: false });
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+  });
 
   // Draggable seek: preview while dragging, commit on release.
   seekRange.addEventListener('input', () => {
