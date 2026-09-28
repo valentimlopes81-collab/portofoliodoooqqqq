@@ -229,6 +229,21 @@ function start() {
     updateMediaSession();
   }
 
+  // Tells the OS where playback actually is in the track. iOS in particular
+  // seems to need this before it treats previoustrack/nexttrack as real
+  // transport controls rather than falling back to its default +/-10s skip.
+  function updatePositionState() {
+    if (!('mediaSession' in navigator) || !('setPositionState' in navigator.mediaSession)) return;
+    if (!isFinite(audio.duration) || audio.duration <= 0) return;
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate || 1,
+        position: Math.min(audio.currentTime, audio.duration),
+      });
+    } catch (e) { /* ignore — e.g. duration changed mid-call */ }
+  }
+
   // Icon visibility is driven purely by root classes (see CSS), so only
   // one of play/pause and one of sound/mute is ever shown.
   const setPlayingUI = (playing) => {
@@ -272,12 +287,21 @@ function start() {
   nextBtn.addEventListener('click', () => loadTrack(index + 1, { autoplay: !audio.paused || wasPlaying }));
 
   // Same prev/next behaviour from the lock screen / notification controls,
-  // instead of the browser's default skip-10-seconds fallback.
+  // instead of the browser's default skip-10-seconds fallback. Each handler
+  // is set separately: some WebKit versions throw on an action they treat
+  // as unsupported, which would otherwise abort every handler after it.
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.setActionHandler('play', play);
-    navigator.mediaSession.setActionHandler('pause', pause);
-    navigator.mediaSession.setActionHandler('previoustrack', () => loadTrack(index - 1, { autoplay: true }));
-    navigator.mediaSession.setActionHandler('nexttrack', () => loadTrack(index + 1, { autoplay: true }));
+    const setHandler = (action, fn) => {
+      try { navigator.mediaSession.setActionHandler(action, fn); }
+      catch (e) { /* action not supported by this browser — skip it */ }
+    };
+    setHandler('play', play);
+    setHandler('pause', pause);
+    setHandler('previoustrack', () => loadTrack(index - 1, { autoplay: true }));
+    setHandler('nexttrack', () => loadTrack(index + 1, { autoplay: true }));
+    // iOS in particular only renders real prev/next (instead of its
+    // default +/-10s skip) once it also gets explicit position state.
+    setHandler('seekto', (details) => { if (details.seekTime != null) audio.currentTime = details.seekTime; });
   }
 
   audio.addEventListener('ended', () => loadTrack(index + 1, { autoplay: true }));
@@ -290,8 +314,12 @@ function start() {
   audio.addEventListener('timeupdate', () => {
     if (!seeking && audio.duration) seekRange.value = String(Math.round((audio.currentTime / audio.duration) * 1000));
     curTimeEl.textContent = fmt(audio.currentTime);
+    updatePositionState();
   });
-  audio.addEventListener('loadedmetadata', () => { durTimeEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('loadedmetadata', () => {
+    durTimeEl.textContent = fmt(audio.duration);
+    updatePositionState();
+  });
   audio.addEventListener('play', () => {
     setPlayingUI(true); saveState({ playing: true });
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
