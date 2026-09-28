@@ -20,12 +20,16 @@
     return url;
   }
 
-  function buildMeta(item) {
-    const left = [item.dataset.camera, item.dataset.lens].filter(Boolean).join(' — ');
+  // Clears any previous camera/lens/exposure caption before drawing the
+  // current slide's (metaItem may be null for a slide with no photo data).
+  function buildMeta(metaItem) {
+    media.querySelectorAll('.lightbox__meta').forEach((el) => el.remove());
+    if (!metaItem) return;
+    const left = [metaItem.dataset.camera, metaItem.dataset.lens].filter(Boolean).join(' — ');
     const right = [
-      item.dataset.iso ? 'ISO ' + item.dataset.iso : null,
-      item.dataset.shutter,
-      item.dataset.aperture,
+      metaItem.dataset.iso ? 'ISO ' + metaItem.dataset.iso : null,
+      metaItem.dataset.shutter,
+      metaItem.dataset.aperture,
     ].filter(Boolean).join(' · ');
     if (!left && !right) return;
     if (left) {
@@ -45,11 +49,16 @@
   let gallery = null; // { show(n), len } while a carousel is open
 
   // Slides come from data-slides (mixed video/image, "video:<url>" prefix
-  // marks an embed) or the older data-images (image-only galleries).
-  function openGallery(item) {
+  // marks an embed), the older data-images (image-only galleries), or a
+  // group of separate .item tiles sharing data-group (see openGroupGallery).
+  // metaItems, when given, is a same-length array of source .item elements
+  // (or null) used to redraw the camera/lens caption as slides change.
+  function openGallery(item, opts) {
     const slides = (item.dataset.slides || item.dataset.images || '').split('|').filter(Boolean);
     const bgs = (item.dataset.bgs || '').split('|');
     if (!slides.length) return;
+    const metaItems = (opts && opts.metaItems) || null;
+    const startIndex = (opts && opts.startIndex) || 0;
 
     const stage = document.createElement('div');
     stage.className = 'lightbox__stage';
@@ -86,6 +95,7 @@
         media.style.background = bg || '';
         stage.appendChild(img);
       }
+      if (metaItems) buildMeta(metaItems[i]); else buildMeta(null);
       count.textContent = (i + 1) + ' / ' + slides.length;
     }
     prev.addEventListener('click', (e) => { e.stopPropagation(); show(i - 1); });
@@ -93,8 +103,19 @@
 
     if (slides.length > 1) { media.appendChild(prev); media.appendChild(next); media.appendChild(count); }
     media.appendChild(stage);
-    show(0);
+    show(startIndex);
     gallery = { show: (d) => show(i + d), len: slides.length };
+  }
+
+  // A set of separate tiles (e.g. every still on the Stills page) sharing
+  // data-group="X": open them as one gallery, starting at the clicked tile,
+  // instead of each opening on its own with no way to reach the next one.
+  function openGroupGallery(item) {
+    const members = Array.from(document.querySelectorAll('.item[data-group="' + item.dataset.group + '"]'));
+    const startIndex = Math.max(0, members.indexOf(item));
+    const proxy = document.createElement('div');
+    proxy.dataset.images = members.map((m) => m.dataset.full).join('|');
+    openGallery(proxy, { startIndex, metaItems: members });
   }
 
   function open(item) {
@@ -104,6 +125,12 @@
     media.style.background = '';
     media.classList.remove('lightbox__media--pad');
     gallery = null;
+    if (item.dataset.group) {
+      openGroupGallery(item);
+      lb.classList.add('open');
+      document.body.classList.add('lb-open');
+      return;
+    }
     if (type === 'gallery') {
       openGallery(item);
       addCaption(item);
@@ -183,6 +210,22 @@
       else if (gallery && e.key === 'ArrowLeft') gallery.show(-1);
       else if (gallery && e.key === 'ArrowRight') gallery.show(1);
     });
+
+    // Swipe left/right to move through a gallery on touch devices (arrows
+    // stay hidden there — see the (hover: none) rule in style.css).
+    let touchStartX = null, touchStartY = null;
+    media.addEventListener('touchstart', (e) => {
+      if (!gallery || e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    media.addEventListener('touchend', (e) => {
+      if (!gallery || touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      touchStartX = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) gallery.show(dx < 0 ? 1 : -1);
+    }, { passive: true });
     if ('IntersectionObserver' in window) {
       io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
