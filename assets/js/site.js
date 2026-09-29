@@ -124,6 +124,7 @@
     media.innerHTML = '';
     media.style.background = '';
     media.classList.remove('lightbox__media--pad');
+    media.classList.toggle('lightbox__media--stills', item.dataset.group === 'stills');
     gallery = null;
     if (item.dataset.group) {
       openGroupGallery(item);
