@@ -72,12 +72,26 @@
     count.className = 'lightbox__count';
 
     let i = 0;
-    function show(n) {
-      i = (n + slides.length) % slides.length;
+    let requestId = 0; // ignore a slow-loading slide if the user has since moved past it
+
+    // Swaps the stage content in, then updates the caption/counter — called
+    // once the slide is actually ready, so the previous slide (and the
+    // arrows pinned to the media box) never collapse to an empty/loading
+    // state in between.
+    function render(n, node, bg) {
+      i = n;
       stage.innerHTML = '';
-      media.classList.remove('lightbox__media--pad');
-      media.style.background = '';
-      const slide = slides[i];
+      media.classList.toggle('lightbox__media--pad', !!bg);
+      media.style.background = bg || '';
+      stage.appendChild(node);
+      if (metaItems) buildMeta(metaItems[i]); else buildMeta(null);
+      count.textContent = (i + 1) + ' / ' + slides.length;
+    }
+
+    function show(n) {
+      const target = (n + slides.length) % slides.length;
+      const slide = slides[target];
+      const myRequest = ++requestId;
       if (slide.startsWith('video:')) {
         const wrap = document.createElement('div');
         wrap.className = 'lightbox__embed';
@@ -86,25 +100,39 @@
         ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
         ifr.allowFullscreen = true;
         wrap.appendChild(ifr);
-        stage.appendChild(wrap);
+        render(target, wrap, '');
       } else {
-        const img = document.createElement('img');
+        const bg = (bgs[target] || '').trim();
+        const img = new Image();
         img.src = slide;
-        const bg = (bgs[i] || '').trim();
-        media.classList.toggle('lightbox__media--pad', !!bg);
-        media.style.background = bg || '';
-        stage.appendChild(img);
+        const go = () => { if (myRequest === requestId) render(target, img, bg); };
+        if (img.complete) go(); else img.onload = img.onerror = go;
       }
-      if (metaItems) buildMeta(metaItems[i]); else buildMeta(null);
-      count.textContent = (i + 1) + ' / ' + slides.length;
     }
-    prev.addEventListener('click', (e) => { e.stopPropagation(); show(i - 1); });
-    next.addEventListener('click', (e) => { e.stopPropagation(); show(i + 1); });
+    // Warm the browser cache for the next/previous slide so a click swaps
+    // in instantly instead of waiting on a fresh network fetch.
+    function preload(n) {
+      const slide = slides[(n + slides.length) % slides.length];
+      if (slide && !slide.startsWith('video:')) new Image().src = slide;
+    }
+    // Moves by `d` from the currently *requested* slide (not necessarily
+    // the one on screen yet, if a previous load is still in flight) and
+    // warms the one just past it, so repeated clicks keep feeling instant.
+    let requested = startIndex;
+    function step(d) {
+      requested = (requested + d + slides.length) % slides.length;
+      show(requested);
+      preload(requested + d);
+    }
+    prev.addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+    next.addEventListener('click', (e) => { e.stopPropagation(); step(1); });
 
     if (slides.length > 1) { media.appendChild(prev); media.appendChild(next); media.appendChild(count); }
     media.appendChild(stage);
     show(startIndex);
-    gallery = { show: (d) => show(i + d), len: slides.length };
+    preload(startIndex + 1);
+    preload(startIndex - 1);
+    gallery = { show: step, len: slides.length };
   }
 
   // A set of separate tiles (e.g. every still on the Stills page) sharing
