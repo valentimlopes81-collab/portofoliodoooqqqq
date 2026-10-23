@@ -41,6 +41,7 @@ function initContact() {
   /* ---------------- Step 1: Calendar ---------------- */
   const monthEl = document.getElementById('calMonth');
   const gridEl = document.getElementById('calGrid');
+  const calEl = document.querySelector('.cal');
   const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S']; // Sun..Sat
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
@@ -48,6 +49,40 @@ function initContact() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let view = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  // Local YYYY-MM-DD (not toISOString, which shifts by timezone offset).
+  const dateKey = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+  // Set from assets/data/availability.json once it loads (see below); the
+  // calendar renders with none blocked and booking open until then, so a
+  // slow or failed fetch never locks visitors out of the form.
+  let agendaEnabled = true;
+  let blockedDates = new Set();
+
+  function showAgendaClosed(closed) {
+    if (calEl) calEl.hidden = closed;
+    let notice = document.getElementById('calClosedNotice');
+    if (closed && !notice) {
+      notice = document.createElement('p');
+      notice.id = 'calClosedNotice';
+      notice.className = 'cal__closed-notice';
+      notice.textContent = "We're not taking new bookings right now — check back soon, or reach out directly via the links below.";
+      calEl.insertAdjacentElement('afterend', notice);
+    }
+    if (notice) notice.hidden = !closed;
+    setNextEnabled(0, false);
+  }
+
+  fetch('assets/data/availability.json', { cache: 'no-store' })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (!data) return;
+      agendaEnabled = data.enabled !== false;
+      blockedDates = new Set(data.blockedDates || []);
+      showAgendaClosed(!agendaEnabled);
+      renderCalendar();
+    })
+    .catch(() => {}); // keep the default (open, nothing blocked)
 
   function renderCalendar() {
     monthEl.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
@@ -74,9 +109,10 @@ function initContact() {
       cell.className = 'cal__day';
       cell.textContent = d;
       const date = new Date(view.getFullYear(), view.getMonth(), d);
+      const blocked = blockedDates.has(dateKey(date));
 
-      if (date < today) {
-        cell.classList.add('is-past');
+      if (date < today || blocked) {
+        cell.classList.add(blocked ? 'is-blocked' : 'is-past');
       } else {
         cell.addEventListener('click', () => {
           gridEl.querySelectorAll('.cal__day.selected').forEach((x) => x.classList.remove('selected'));

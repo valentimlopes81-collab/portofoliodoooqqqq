@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — DOOOQQQQ</title>
+  <link rel="icon" href="assets/img/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* Page-specific — everything else reuses style.css's dark theme and
+       the .cal / .cal__* calendar classes from the contact page. */
+    .admin-wrap { max-width: 640px; margin: 0 auto; padding: 60px 20px 100px; }
+    .admin-wrap h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+    .admin-wrap p.sub { color: var(--muted); margin-bottom: 36px; font-size: 14px; line-height: 1.6; }
+    .admin-field { margin-bottom: 18px; }
+    .admin-field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .admin-field input[type="password"],
+    .admin-field input[type="text"] {
+      width: 100%; background: var(--card); border: 1px solid var(--line); color: var(--fg);
+      padding: 14px 16px; border-radius: 6px; font-size: 15px;
+    }
+    .admin-check { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+    .admin-btn {
+      background: var(--fg); color: var(--bg); border: none; padding: 14px 28px;
+      border-radius: 999px; font-weight: 800; text-transform: uppercase; font-size: 13px;
+      letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s var(--ease);
+    }
+    .admin-btn:hover { opacity: 0.8; }
+    .admin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .admin-btn--ghost { background: none; border: 1px solid var(--line); color: var(--fg); }
+    .admin-msg { font-size: 14px; margin-top: 16px; min-height: 20px; }
+    .admin-msg.is-error { color: #e5484d; }
+    .admin-msg.is-ok { color: #4ade80; }
+    .admin-toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 28px; }
+    .admin-toggle-row span { font-weight: 700; }
+    .admin-switch { position: relative; width: 48px; height: 28px; flex: none; }
+    .admin-switch input { opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+    .admin-switch i { position: absolute; inset: 0; background: #3a3a3a; border-radius: 999px; transition: background 0.2s var(--ease); pointer-events: none; }
+    .admin-switch i::before { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 999px; background: #fff; transition: transform 0.2s var(--ease); }
+    .admin-switch input:checked ~ i { background: #4ade80; }
+    .admin-switch input:checked ~ i::before { transform: translateX(20px); }
+    .admin-hint { color: var(--muted); font-size: 13px; margin: 18px 0 28px; line-height: 1.6; }
+    .admin-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 24px; }
+    #adminApp { display: none; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="brand" aria-label="DOOOQQQQ — home">
+      <img class="brand__logo" src="assets/img/logo.png" alt="DOOOQQQQ" />
+      <span class="brand__text">DOOOQQQQ</span>
+    </a>
+  </header>
+
+  <main class="admin-wrap">
+    <h1>Agenda</h1>
+    <p class="sub">Liga/desliga a agenda e marca os dias já preenchidos. As alterações ficam visíveis no site assim que gravares.</p>
+
+    <div id="adminLogin">
+      <div class="admin-field">
+        <label for="tokenInput">GitHub token</label>
+        <input type="password" id="tokenInput" placeholder="ghp_..." autocomplete="off" />
+      </div>
+      <label class="admin-check">
+        <input type="checkbox" id="rememberToken" checked />
+        Guardar neste dispositivo
+      </label>
+      <button class="admin-btn" id="loginBtn">Entrar</button>
+      <p class="admin-msg" id="loginMsg"></p>
+    </div>
+
+    <div id="adminApp">
+      <div class="admin-toggle-row">
+        <span>Agenda disponível</span>
+        <label class="admin-switch">
+          <input type="checkbox" id="enabledToggle" />
+          <i></i>
+        </label>
+      </div>
+
+      <div class="cal">
+        <div class="cal__head">
+          <button type="button" class="cal__nav" id="calPrev" aria-label="Previous month">&#8249;</button>
+          <span class="cal__month" id="calMonth"></span>
+          <button type="button" class="cal__nav" id="calNext" aria-label="Next month">&#8250;</button>
+        </div>
+        <div class="cal__grid" id="calGrid"></div>
+      </div>
+      <p class="admin-hint">Clica num dia para o marcar/desmarcar como preenchido. Dias já passados não são clicáveis.</p>
+
+      <div class="admin-actions">
+        <button class="admin-btn" id="saveBtn">Guardar alterações</button>
+        <button class="admin-btn admin-btn--ghost" id="logoutBtn">Sair</button>
+      </div>
+      <p class="admin-msg" id="saveMsg"></p>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const OWNER = 'valentimlopes81-collab';
+      const REPO = 'portofoliodoooqqqq';
+      const BRANCH = 'claude/portfolio-afonso-quintela-8znygw';
+      const PATH = 'assets/data/availability.json';
+      const API_URL = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}?ref=${BRANCH}`;
+      const STORAGE_KEY = 'dq_admin_token';
+
+      const loginView = document.getElementById('adminLogin');
+      const appView = document.getElementById('adminApp');
+      const tokenInput = document.getElementById('tokenInput');
+      const rememberCheck = document.getElementById('rememberToken');
+      const loginBtn = document.getElementById('loginBtn');
+      const loginMsg = document.getElementById('loginMsg');
+      const enabledToggle = document.getElementById('enabledToggle');
+      const monthEl = document.getElementById('calMonth');
+      const gridEl = document.getElementById('calGrid');
+      const saveBtn = document.getElementById('saveBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const saveMsg = document.getElementById('saveMsg');
+
+      const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      let view = new Date(today.getFullYear(), today.getMonth(), 1);
+      const dateKey = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+      let token = null;
+      let sha = null;
+      let blocked = new Set();
+
+      function b64encode(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+      }
+      function b64decode(str) {
+        return decodeURIComponent(escape(atob(str)));
+      }
+
+      function renderCalendar() {
+        monthEl.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+        gridEl.innerHTML = '';
+        DOW.forEach((d) => {
+          const c = document.createElement('div');
+          c.className = 'cal__dow';
+          c.textContent = d;
+          gridEl.appendChild(c);
+        });
+        const firstDay = new Date(view.getFullYear(), view.getMonth(), 1).getDay();
+        const daysInMonth = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+        for (let i = 0; i < firstDay; i++) {
+          const e = document.createElement('div');
+          e.className = 'cal__day is-empty';
+          gridEl.appendChild(e);
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cell = document.createElement('div');
+          cell.className = 'cal__day';
+          cell.textContent = d;
+          const date = new Date(view.getFullYear(), view.getMonth(), d);
+          const key = dateKey(date);
+          if (date < today) {
+            cell.classList.add('is-past');
+          } else {
+            if (blocked.has(key)) cell.classList.add('is-blocked');
+            cell.addEventListener('click', () => {
+              if (blocked.has(key)) blocked.delete(key); else blocked.add(key);
+              renderCalendar();
+            });
+          }
+          gridEl.appendChild(cell);
+        }
+      }
+      document.getElementById('calPrev').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); renderCalendar(); });
+      document.getElementById('calNext').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); renderCalendar(); });
+
+      async function loadData(t) {
+        const res = await fetch(API_URL, { headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json' } });
+        if (!res.ok) throw new Error(res.status === 401 || res.status === 404 ? 'Token inválido ou sem acesso a este repositório.' : 'Erro ao carregar (status ' + res.status + ').');
+        const json = await res.json();
+        sha = json.sha;
+        const data = JSON.parse(b64decode(json.content));
+        enabledToggle.checked = data.enabled !== false;
+        blocked = new Set(data.blockedDates || []);
+        renderCalendar();
+      }
+
+      async function enter(t) {
+        loginMsg.textContent = 'A verificar…';
+        loginMsg.className = 'admin-msg';
+        try {
+          await loadData(t);
+          token = t;
+          loginView.style.display = 'none';
+          appView.style.display = 'block';
+        } catch (e) {
+          loginMsg.textContent = e.message || 'Falhou.';
+          loginMsg.className = 'admin-msg is-error';
+        }
+      }
+
+      loginBtn.addEventListener('click', () => {
+        const t = tokenInput.value.trim();
+        if (!t) return;
+        if (rememberCheck.checked) localStorage.setItem(STORAGE_KEY, t); else localStorage.removeItem(STORAGE_KEY);
+        enter(t);
+      });
+      tokenInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        token = null;
+        appView.style.display = 'none';
+        loginView.style.display = 'block';
+        tokenInput.value = '';
+        loginMsg.textContent = '';
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        saveBtn.disabled = true;
+        saveMsg.textContent = 'A gravar…';
+        saveMsg.className = 'admin-msg';
+        const payload = { enabled: enabledToggle.checked, blockedDates: Array.from(blocked).sort() };
+        try {
+          const res = await fetch(API_URL.split('?')[0], {
+            method: 'PUT',
+            headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: 'Update agenda availability',
+              content: b64encode(JSON.stringify(payload, null, 2) + '\n'),
+              sha,
+              branch: BRANCH,
+            }),
+          });
+          if (!res.ok) throw new Error('Erro ao gravar (status ' + res.status + ').');
+          const json = await res.json();
+          sha = json.content.sha;
+          saveMsg.textContent = 'Gravado — o site atualiza-se em cerca de um minuto.';
+          saveMsg.className = 'admin-msg is-ok';
+        } catch (e) {
+          saveMsg.textContent = e.message || 'Falhou.';
+          saveMsg.className = 'admin-msg is-error';
+        } finally {
+          saveBtn.disabled = false;
+        }
+      });
+
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) { tokenInput.value = stored; enter(stored); }
+    })();
+  </script>
+</body>
+</html>
