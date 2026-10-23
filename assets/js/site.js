@@ -93,14 +93,22 @@
       const slide = slides[target];
       const myRequest = ++requestId;
       if (slide.startsWith('video:')) {
-        const wrap = document.createElement('div');
-        wrap.className = 'lightbox__embed';
-        const ifr = document.createElement('iframe');
-        ifr.src = toEmbedUrl(slide.slice(6));
-        ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
-        ifr.allowFullscreen = true;
-        wrap.appendChild(ifr);
-        render(target, wrap, '');
+        const url = slide.slice(6);
+        if (/youtube\.com|youtu\.be|vimeo\.com/.test(url)) {
+          const wrap = document.createElement('div');
+          wrap.className = 'lightbox__embed';
+          const ifr = document.createElement('iframe');
+          ifr.src = toEmbedUrl(url);
+          ifr.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+          ifr.allowFullscreen = true;
+          wrap.appendChild(ifr);
+          render(target, wrap, '');
+        } else {
+          // A local file (mp4/webm/mov) rather than a YouTube/Vimeo link.
+          const v = document.createElement('video');
+          v.src = url; v.controls = true; v.autoplay = true; v.playsInline = true;
+          render(target, v, '');
+        }
       } else {
         const bg = (bgs[target] || '').trim();
         const img = new Image();
