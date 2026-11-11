@@ -105,9 +105,15 @@
           render(target, wrap, '');
         } else {
           // A local file (mp4/webm/mov) rather than a YouTube/Vimeo link.
+          // Wait for it to actually be playable before swapping it in —
+          // same reasoning as the image path below: swap too early and the
+          // stage (and the arrows pinned to it) flash empty while it loads.
           const v = document.createElement('video');
-          v.src = url; v.controls = true; v.autoplay = true; v.playsInline = true;
-          render(target, v, '');
+          v.controls = true; v.playsInline = true; v.autoplay = true; v.preload = 'auto';
+          v.src = url;
+          const go = () => { if (myRequest === requestId) render(target, v, ''); };
+          if (v.readyState >= 3) go();
+          else { v.addEventListener('canplay', go, { once: true }); v.addEventListener('error', go, { once: true }); }
         }
       } else {
         const bg = (bgs[target] || '').trim();
@@ -118,10 +124,24 @@
       }
     }
     // Warm the browser cache for the next/previous slide so a click swaps
-    // in instantly instead of waiting on a fresh network fetch.
+    // in instantly instead of waiting on a fresh network fetch. Local
+    // videos buffer the same way images do; a YouTube/Vimeo slide can't
+    // really be preloaded (it's a whole embedded page), so it's skipped —
+    // the preconnect hints in buildLightboxOnce are the best we can do there.
+    const preloadedVideos = new Map();
     function preload(n) {
       const slide = slides[(n + slides.length) % slides.length];
-      if (slide && !slide.startsWith('video:')) new Image().src = slide;
+      if (!slide) return;
+      if (slide.startsWith('video:')) {
+        const url = slide.slice(6);
+        if (/youtube\.com|youtu\.be|vimeo\.com/.test(url)) return;
+        if (preloadedVideos.has(url)) return;
+        const v = document.createElement('video');
+        v.preload = 'auto'; v.muted = true; v.src = url;
+        preloadedVideos.set(url, v);
+      } else {
+        new Image().src = slide;
+      }
     }
     // Moves by `d` from the currently *requested* slide (not necessarily
     // the one on screen yet, if a previous load is still in flight) and
@@ -231,6 +251,19 @@
 
   function buildLightboxOnce() {
     if (lb) return;
+
+    // Warm the connection to YouTube's player domain ahead of any click —
+    // the DNS/TLS handshake is the one part of an embed's load time we can
+    // actually shave off; the embed itself can't be preloaded like an
+    // image or local video.
+    ['https://www.youtube-nocookie.com', 'https://i.ytimg.com'].forEach((origin) => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = origin;
+      link.crossOrigin = '';
+      document.head.appendChild(link);
+    });
+
     lb = document.createElement('div');
     lb.className = 'lightbox';
     lb.innerHTML =
